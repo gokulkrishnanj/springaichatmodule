@@ -1,5 +1,7 @@
 package com.example.springaichatmodel.Service;
 
+import com.example.springaichatmodel.DTO.ChatPromptDTO;
+
 public interface ChatGPTModelService {
-    String getResponse(String message);
+    ChatPromptDTO getResponse(String message);
 }

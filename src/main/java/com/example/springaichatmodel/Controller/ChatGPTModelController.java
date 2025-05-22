@@ -19,7 +19,7 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
 
     public ResponseEntity<ChatPromptDTO> getResponse(ChatPromptDTO chatPromptDTO){
         ChatPromptDTO chatPromptDTOResponse= new ChatPromptDTO();
-        chatPromptDTOResponse.setMessage(chatGPTModelService.getResponse(chatGPTModelService.getResponse(chatPromptDTO.getMessage())));
-        return new ResponseEntity<>(chatPromptDTOResponse, HttpStatus.OK);
+//        chatPromptDTOResponse.setMessage(chatGPTModelService.getResponse(chatGPTModelService.getResponse(chatPromptDTO.getMessage())));
+        return new ResponseEntity<>(chatGPTModelService.getResponse(chatPromptDTO.getQuestion()),HttpStatus.OK);
     }
 }

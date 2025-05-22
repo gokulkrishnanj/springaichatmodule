@@ -1,5 +1,6 @@
 package com.example.springaichatmodel.Service.Impl;
 
+import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
@@ -14,10 +15,10 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     }
 
     @Override
-    public String getResponse(String message){
+    public ChatPromptDTO getResponse(String message){
         return chatClient
                 .prompt(message)
                 .call()
-                .content();
+                .entity(ChatPromptDTO.class);
     }
 }
