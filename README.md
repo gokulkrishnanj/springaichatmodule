@@ -1,2 +1,3 @@
 # springaichatmodule
-Chat module using SpringAI and vertex AI Gemini AI.
+Chat module using SpringAI and Gemini AI(using API key).
+Currently In progress.
