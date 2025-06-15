@@ -2,14 +2,31 @@ package com.example.springaichatmodel.Configuration;
 
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.List;
 
 @Configuration
 public class ChatClientConfiguration {
 
+
     @Bean
-    public ChatClient customChatClient(ChatClient.Builder chatClientBuilder) {
-        return chatClientBuilder.build();
+    public ChatClient customChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
+        return chatClientBuilder.defaultAdvisors(new SafeGuardAdvisor(List.of("gokul")), new SimpleLoggerAdvisor(), MessageChatMemoryAdvisor.builder(chatMemory).build()).build();
     }
+
+    @Bean
+    public ChatMemory chatMemory() {
+        return MessageWindowChatMemory
+                .builder()
+                .maxMessages(10)
+                .build();
+    }
+
 }
