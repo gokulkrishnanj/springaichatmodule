@@ -10,5 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ChatPromptDTO {
     private String question;
+    private String searchInstead;
     private String answer;
+    private String referenceLink;
 }
