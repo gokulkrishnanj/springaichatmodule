@@ -4,12 +4,13 @@ import jakarta.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.ai.chat.model.ChatResponse;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ChatPromptDTO {
     private String question;
+    private String searchInstead;
     private String answer;
+    private String referenceLink;
 }
