@@ -5,6 +5,7 @@ import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,17 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
 
     private ChatClient chatClient;
     private CreatePromptForChat createPromptForChat;
+    private ChatMemory chatMemory;
 
-    ChatGPTModelServiceImpl(ChatClient chatClient, CreatePromptForChat createPromptForChat) {
+    ChatGPTModelServiceImpl(ChatClient chatClient, CreatePromptForChat createPromptForChat, ChatMemory chatMemory) {
         this.chatClient = chatClient;
         this.createPromptForChat = createPromptForChat;
+        this.chatMemory = chatMemory;
     }
 
     @Override
     public String getResponseAsString(String message) {
-        Prompt prompt = (message.isBlank() || message.isEmpty()) ? createPromptForChat.systemMessagePrompt() : createPromptForChat.createPrompt(message);
+        Prompt prompt = createPromptForChat.createPromptForRequest(message);
         return chatClient
                 .prompt(prompt)
                 .call()
@@ -34,24 +37,26 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
 
     @Override
     public ChatPromptDTO getResponseAsEntity(String message) {
-//        Prompt prompt = createPromptForChat.createPromptForRequest(message);
-        String conversationID = "1";
-        Prompt prompt = (message.isBlank() || message.isEmpty()) ? createPromptForChat.systemMessagePrompt() : createPromptForChat.createPrompt(message);
+        Prompt prompt = createPromptForChat.createPromptForRequest(message);
         return chatClient
                 .prompt(prompt)
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationID))
                 .call()
                 .entity(ChatPromptDTO.class);
     }
 
     @Override
     public List<ChatPromptDTO> getResponseAsGenerics(String message) {
-        Prompt prompt = (message.isBlank() || message.isEmpty()) ? createPromptForChat.systemMessagePrompt() : createPromptForChat.createPrompt(message);
+        Prompt prompt = createPromptForChat.createPromptForRequest(message);
         return chatClient
                 .prompt(prompt)
                 .call()
                 .entity(new ParameterizedTypeReference<List<ChatPromptDTO>>() {
                 });
+    }
+
+    @Override
+    public List<Message> getContentsInMemory(){
+        return chatMemory.get("default");
     }
 
 }

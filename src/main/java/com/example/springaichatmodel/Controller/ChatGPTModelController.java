@@ -4,6 +4,7 @@ package com.example.springaichatmodel.Controller;
 import com.example.springaichatmodel.API.ChatGPTModelAPI;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,5 +30,9 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
 
     public ResponseEntity<List<ChatPromptDTO>> getResponseAsGenerics(ChatPromptDTO chatPromptDTO) {
         return new ResponseEntity<>(chatGPTModelService.getResponseAsGenerics(chatPromptDTO.getQuestion()), HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<Message>> getContentsInMemory(){
+        return new ResponseEntity<>(chatGPTModelService.getContentsInMemory(), HttpStatus.OK);
     }
 }
