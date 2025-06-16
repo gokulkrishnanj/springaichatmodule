@@ -52,6 +52,7 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         Prompt prompt = createPromptForChat.createPromptForRequest(message);
         return chatClient
                 .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, Constants.defaultConversationId))
                 .call()
                 .entity(new ParameterizedTypeReference<List<ChatPromptDTO>>() {
                 });
