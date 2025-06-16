@@ -3,8 +3,10 @@ package com.example.springaichatmodel.Service.Impl;
 import com.example.springaichatmodel.Configuration.CreatePromptForChat;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
+import com.example.springaichatmodel.Utils.Constants;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.core.ParameterizedTypeReference;
@@ -40,6 +42,7 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         Prompt prompt = createPromptForChat.createPromptForRequest(message);
         return chatClient
                 .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, Constants.defaultConversationId))
                 .call()
                 .entity(ChatPromptDTO.class);
     }
@@ -55,8 +58,8 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     }
 
     @Override
-    public List<Message> getContentsInMemory(){
-        return chatMemory.get("default");
+    public List<Message> getContentsInMemory() {
+        return chatMemory.get(Constants.defaultConversationId);
     }
 
 }

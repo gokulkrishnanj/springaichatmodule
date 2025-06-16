@@ -13,9 +13,9 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> runTimeException(Exception e){
+    public ResponseEntity<Map<String, String>> runTimeException(Exception e) {
         Map<String, String> errorResponseMap = new HashMap<>();
-        errorResponseMap.put("error",e.getLocalizedMessage());
+        errorResponseMap.put("error", e.getLocalizedMessage());
         return new ResponseEntity<>(errorResponseMap, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

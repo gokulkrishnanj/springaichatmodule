@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class HealthController implements Health {
-    public ResponseEntity<String> getHealth(){
+    public ResponseEntity<String> getHealth() {
         return new ResponseEntity<>("Health", HttpStatus.OK);
     }
 }

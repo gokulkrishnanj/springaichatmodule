@@ -32,7 +32,7 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         return new ResponseEntity<>(chatGPTModelService.getResponseAsGenerics(chatPromptDTO.getQuestion()), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Message>> getContentsInMemory(){
+    public ResponseEntity<List<Message>> getContentsInMemory() {
         return new ResponseEntity<>(chatGPTModelService.getContentsInMemory(), HttpStatus.OK);
     }
 }
