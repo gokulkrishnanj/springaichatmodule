@@ -70,6 +70,7 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         return chatMemory.get(Constants.defaultConversationId);
     }
 
+    //need to handle the url issue.
     @Override
     public List<Image> generateImageFromInstruction(String instructions){
         ImagePrompt imagePrompt = new ImagePrompt(instructions,
