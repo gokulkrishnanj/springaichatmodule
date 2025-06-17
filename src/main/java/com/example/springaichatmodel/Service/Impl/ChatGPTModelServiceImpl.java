@@ -9,9 +9,14 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.prompt.Prompt;
+import org.springframework.ai.image.*;
+import org.springframework.ai.model.stabilityai.autoconfigure.StabilityAiImageAutoConfiguration;
+import org.springframework.ai.stabilityai.StabilityAiImageModel;
+import org.springframework.ai.stabilityai.api.StabilityAiImageOptions;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,11 +26,13 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     private ChatClient chatClient;
     private CreatePromptForChat createPromptForChat;
     private ChatMemory chatMemory;
+    private StabilityAiImageModel stabilityAiImageModel;
 
-    ChatGPTModelServiceImpl(ChatClient chatClient, CreatePromptForChat createPromptForChat, ChatMemory chatMemory) {
+    ChatGPTModelServiceImpl(ChatClient chatClient, CreatePromptForChat createPromptForChat, ChatMemory chatMemory, StabilityAiImageModel stabilityAiImageModel) {
         this.chatClient = chatClient;
         this.createPromptForChat = createPromptForChat;
         this.chatMemory = chatMemory;
+        this.stabilityAiImageModel = stabilityAiImageModel;
     }
 
     @Override
@@ -61,6 +68,19 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     @Override
     public List<Message> getContentsInMemory() {
         return chatMemory.get(Constants.defaultConversationId);
+    }
+
+    @Override
+    public List<Image> generateImageFromInstruction(String instructions){
+        ImagePrompt imagePrompt = new ImagePrompt(instructions,
+                StabilityAiImageOptions.builder().N(2).stylePreset("cinematic").height(1024).width(1024).build());
+        ImageResponse imageResponse = stabilityAiImageModel.call(imagePrompt);
+        List<Image> imageURLList = new ArrayList<>();
+        imageResponse.getResults().forEach(result->{
+            System.out.println("url:"+result.getOutput());
+            imageURLList.add(result.getOutput());
+        });
+        return imageURLList;
     }
 
 }

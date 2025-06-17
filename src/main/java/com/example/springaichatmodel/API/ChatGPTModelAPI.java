@@ -3,11 +3,9 @@ package com.example.springaichatmodel.API;
 
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.image.Image;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,4 +28,6 @@ public interface ChatGPTModelAPI {
     @GetMapping(value = "/getContentsInMemory")
     ResponseEntity<List<Message>> getContentsInMemory();
 
+    @PostMapping(value = "/generateImage")
+    ResponseEntity<List<Image>> generateImageFromInstruction(@RequestParam(value = "instruction")String instruction);
 }
