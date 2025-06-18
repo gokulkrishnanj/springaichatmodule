@@ -29,5 +29,5 @@ public interface ChatGPTModelAPI {
     ResponseEntity<List<Message>> getContentsInMemory();
 
     @PostMapping(value = "/generateImage")
-    ResponseEntity<List<Image>> generateImageFromInstruction(@RequestParam(value = "instruction")String instruction);
+    ResponseEntity<List<String>> generateImageFromInstruction(@RequestParam(value = "instruction")String instruction);
 }

@@ -37,8 +37,7 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         return new ResponseEntity<>(chatGPTModelService.getContentsInMemory(), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Image>> generateImageFromInstruction(String instruction){
-        System.out.println("inst:"+instruction);
+    public ResponseEntity<List<String>> generateImageFromInstruction(String instruction){
         return new ResponseEntity<>(chatGPTModelService.generateImageFromInstruction(instruction), HttpStatus.OK);
     }
 }
