@@ -19,4 +19,11 @@ public class CreatePromptForChat {
         Message systemMessage = new SystemPromptTemplate(systemText).createMessage();
         return new Prompt(List.of(userMessage, systemMessage));
     }
+
+    public Prompt createPromptForDataExtractionFromImage(){
+        Message userMessage = new UserMessage(Constants.defaultUserPromptMessageForImage);
+        Message systemMessageForSafetyPurpose = new SystemPromptTemplate(Constants.defaultSystemPromptMessageForImageSafetyPupose).createMessage();
+        Message systemMessageForImageOptimization = new SystemPromptTemplate(Constants.defaultSystemPromptMessageForImageOptimization).createMessage();
+        return new Prompt(List.of(userMessage,systemMessageForSafetyPurpose,systemMessageForImageOptimization));
+    }
 }
