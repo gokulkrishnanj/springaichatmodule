@@ -2,16 +2,18 @@ package com.example.springaichatmodel.API;
 
 
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
+import com.example.springaichatmodel.Utils.Constants;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.image.Image;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequestMapping(value = "/api/v1")
 public interface ChatGPTModelAPI {
-
     //API to get the response from AImodel as a String.
     @PostMapping(value = "/getResponseAsString")
     ResponseEntity<String> getResponseAsString(@RequestBody ChatPromptDTO chatPromptDTO);
@@ -29,5 +31,9 @@ public interface ChatGPTModelAPI {
     ResponseEntity<List<Message>> getContentsInMemory();
 
     @PostMapping(value = "/generateImage")
-    ResponseEntity<List<String>> generateImageFromInstruction(@RequestParam(value = "instruction")String instruction);
+    ResponseEntity<List<String>> generateImageFromInstruction(@RequestParam(value = "instruction") String instruction);
+
+    @PostMapping(value = "/uploadImage")
+    ResponseEntity<String> getResponseByAnalysingTheImage(@RequestParam(value = "image") MultipartFile file,
+                                                          @RequestParam(value = "instruction", required = false, defaultValue = Constants.defaultUserPromptMessageForImage) String instruction) throws IOException;
 }
