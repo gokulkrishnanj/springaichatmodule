@@ -24,7 +24,8 @@ public class CreatePromptForChat {
         Message userMessage = new UserMessage(message);
         String systemText = Constants.systemDefaultPromptMessage;
         Message systemMessage = new SystemPromptTemplate(systemText).createMessage();
-        return new Prompt(List.of(userMessage, systemMessage));
+        Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
+        return new Prompt(List.of(userMessage, systemMessage, safeGuardDefaultSystemMessage));
     }
 
     public Prompt createPromptForDataExtractionFromImage(MultipartFile file, String message) {
@@ -38,6 +39,7 @@ public class CreatePromptForChat {
                 .build();
         Message systemMessageForSafetyPurpose = new SystemPromptTemplate(Constants.defaultSystemPromptMessageForImageSafetyPupose).createMessage();
         Message systemMessageForImageOptimization = new SystemPromptTemplate(Constants.defaultSystemPromptMessageForImageOptimization).createMessage();
-        return new Prompt(List.of(userMessage, systemMessageForSafetyPurpose, systemMessageForImageOptimization));
+        Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
+        return new Prompt(List.of(userMessage, systemMessageForSafetyPurpose, systemMessageForImageOptimization, safeGuardDefaultSystemMessage));
     }
 }
