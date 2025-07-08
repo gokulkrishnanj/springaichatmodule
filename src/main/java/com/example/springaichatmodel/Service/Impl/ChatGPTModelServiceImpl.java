@@ -110,7 +110,7 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         return uploadResult.get("url").toString();
     }
 
-    public List<ImageDetailsDTO> getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException {
+    public List<ImageDetailsDTO> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException {
         Prompt prompt = createPromptForChat.createPromptForDataExtractionFromImage(file, instructions);
         return chatClient
                 .prompt(prompt)
