@@ -19,5 +19,5 @@ public interface ChatGPTModelService {
 
     List<String> generateImageFromInstruction(String instruction);
 
-    List<ImageDetailsDTO> getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException;
+    List<ImageDetailsDTO> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException;
 }

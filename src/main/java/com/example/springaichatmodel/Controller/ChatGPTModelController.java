@@ -43,7 +43,7 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         return new ResponseEntity<>(chatGPTModelService.generateImageFromInstruction(instruction), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<ImageDetailsDTO>> getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException {
-        return new ResponseEntity<>(chatGPTModelService.getResponseByAnalysingTheImage(file, instructions), HttpStatus.OK);
+    public ResponseEntity<List<ImageDetailsDTO>> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException {
+        return new ResponseEntity<>(chatGPTModelService.getResponseByAnalysingTheMedia(file, instructions), HttpStatus.OK);
     }
 }
