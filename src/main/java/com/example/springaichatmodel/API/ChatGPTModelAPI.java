@@ -12,28 +12,28 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@RequestMapping(value = "/api/v1")
+@RequestMapping(value = "${api/v1}")
 public interface ChatGPTModelAPI {
     //API to get the response from AImodel as a String.
-    @PostMapping(value = "/getResponseAsString")
+    @PostMapping(value = "${getResponseAsString}")
     ResponseEntity<String> getResponseAsString(@RequestBody ChatPromptDTO chatPromptDTO);
 
     //API to get the response from AIModel as an Entity.
-    @PostMapping(value = "/getResponseAsEntity")
+    @PostMapping(value = "${getResponseAsEntity}")
     ResponseEntity<ChatPromptDTO> getResponseAsEntity(@RequestBody ChatPromptDTO chatPromptDTO);
 
     //API to get the response from AIModel as Generics.
-    @PostMapping(value = "/getResponseAsGenerics")
+    @PostMapping(value = "${getResponseAsGenerics}")
     ResponseEntity<List<ChatPromptDTO>> getResponseAsGenerics(@RequestBody ChatPromptDTO chatPromptDTO);
 
     //API to get contents in the chat memory.
-    @GetMapping(value = "/getContentsInMemory")
+    @GetMapping(value = "${getContentsInMemory}")
     ResponseEntity<List<Message>> getContentsInMemory();
 
-    @PostMapping(value = "/generateImage")
+    @PostMapping(value = "${generateImage}")
     ResponseEntity<List<String>> generateImageFromInstruction(@RequestParam(value = "instruction") String instruction);
 
-    @PostMapping(value = "/uploadImage")
-    ResponseEntity<List<ImageDetailsDTO>> getResponseByAnalysingTheImage(@RequestParam(value = "image") MultipartFile file,
+    @PostMapping(value = "${uploadMedia}")
+    ResponseEntity<List<ImageDetailsDTO>> getResponseByAnalysingTheMedia(@RequestParam(value = "image") MultipartFile file,
                                                                          @RequestParam(value = "instruction", required = false, defaultValue = Constants.defaultUserPromptMessageForImage) String instruction) throws IOException;
 }
