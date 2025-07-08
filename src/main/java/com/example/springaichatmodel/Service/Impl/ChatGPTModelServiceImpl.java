@@ -4,6 +4,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.example.springaichatmodel.Configuration.CreatePromptForChat;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
+import com.example.springaichatmodel.DTO.ImageDetailsDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import com.example.springaichatmodel.Utils.Constants;
 import org.springframework.ai.chat.client.ChatClient;
@@ -109,13 +110,14 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         return uploadResult.get("url").toString();
     }
 
-    public String getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException {
+    public List<ImageDetailsDTO> getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException {
         Prompt prompt = createPromptForChat.createPromptForDataExtractionFromImage(file, instructions);
         return chatClient
-                .prompt()
+                .prompt(prompt)
                 .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, Constants.defaultConversationId))
                 .call()
-                .content();
+                .entity(new ParameterizedTypeReference<List<ImageDetailsDTO>>() {
+                });
     }
 
 }

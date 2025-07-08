@@ -1,6 +1,7 @@
 package com.example.springaichatmodel.Service;
 
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
+import com.example.springaichatmodel.DTO.ImageDetailsDTO;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -18,5 +19,5 @@ public interface ChatGPTModelService {
 
     List<String> generateImageFromInstruction(String instruction);
 
-    String getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException;
+    List<ImageDetailsDTO> getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException;
 }

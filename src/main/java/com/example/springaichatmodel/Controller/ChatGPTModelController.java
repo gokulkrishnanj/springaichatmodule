@@ -3,6 +3,7 @@ package com.example.springaichatmodel.Controller;
 
 import com.example.springaichatmodel.API.ChatGPTModelAPI;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
+import com.example.springaichatmodel.DTO.ImageDetailsDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,7 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         return new ResponseEntity<>(chatGPTModelService.generateImageFromInstruction(instruction), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException {
+    public ResponseEntity<List<ImageDetailsDTO>> getResponseByAnalysingTheImage(MultipartFile file, String instructions) throws IOException {
         return new ResponseEntity<>(chatGPTModelService.getResponseByAnalysingTheImage(file, instructions), HttpStatus.OK);
     }
 }
