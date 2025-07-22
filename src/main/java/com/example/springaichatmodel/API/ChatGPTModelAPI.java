@@ -36,4 +36,7 @@ public interface ChatGPTModelAPI {
     @PostMapping(value = "${uploadMedia}")
     ResponseEntity<List<ImageDetailsDTO>> getResponseByAnalysingTheMedia(@RequestParam(value = "image") MultipartFile file,
                                                                          @RequestParam(value = "instruction", required = false, defaultValue = Constants.defaultUserPromptMessageForImage) String instruction) throws IOException;
+
+    @PostMapping(value = "${clearChatMemory}")
+    ResponseEntity<String> clearChatMemory();
 }

@@ -46,4 +46,8 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
     public ResponseEntity<List<ImageDetailsDTO>> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException {
         return new ResponseEntity<>(chatGPTModelService.getResponseByAnalysingTheMedia(file, instructions), HttpStatus.OK);
     }
+
+    public ResponseEntity<String> clearChatMemory(){
+        return new ResponseEntity<>(chatGPTModelService.clearChatMemory(),HttpStatus.OK);
+    }
 }

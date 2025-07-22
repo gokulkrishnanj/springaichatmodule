@@ -110,6 +110,7 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         return uploadResult.get("url").toString();
     }
 
+    @Override
     public List<ImageDetailsDTO> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException {
         Prompt prompt = createPromptForChat.createPromptForDataExtractionFromImage(file, instructions);
         return chatClient
@@ -120,4 +121,11 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
                 });
     }
 
+    @Override
+    public String clearChatMemory(){
+        chatMemory.clear(Constants.defaultConversationId);
+        if (chatMemory.get(Constants.defaultConversationId).size()==0)
+                return "Memory cleared";
+        return "Try again Data of size "+ chatMemory.get(Constants.defaultConversationId).size()+ " is present";
+    }
 }
