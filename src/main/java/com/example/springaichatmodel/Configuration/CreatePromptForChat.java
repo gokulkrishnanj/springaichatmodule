@@ -37,7 +37,7 @@ public class CreatePromptForChat {
                 .media(new Media(mimeType, file.getResource()))
                 .metadata(new HashMap<>())
                 .build();
-        Message systemMessageForSafetyPurpose = new SystemPromptTemplate(Constants.defaultSystemPromptMessageForImageSafetyPupose).createMessage();
+        Message systemMessageForSafetyPurpose = new SystemPromptTemplate(Constants.defaultSystemPromptMessageForImageSafetyPurpose).createMessage();
         Message systemMessageForImageOptimization = new SystemPromptTemplate(Constants.defaultSystemPromptMessageForImageOptimization).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
         return new Prompt(List.of(userMessage, systemMessageForSafetyPurpose, systemMessageForImageOptimization, safeGuardDefaultSystemMessage));
