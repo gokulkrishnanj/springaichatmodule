@@ -22,10 +22,9 @@ public class CreatePromptForChat {
     // Prompt with user message(USER) and System message.
     public Prompt createPromptForRequest(String message) {
         Message userMessage = new UserMessage(message);
-        String systemText = Constants.systemDefaultPromptMessage;
-        Message systemMessage = new SystemPromptTemplate(systemText).createMessage();
+        Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
-        return new Prompt(List.of(userMessage, systemMessage, safeGuardDefaultSystemMessage));
+        return new Prompt(List.of(systemMessage, userMessage,safeGuardDefaultSystemMessage));
     }
 
     public Prompt createPromptForDataExtractionFromImage(MultipartFile file, String message) {

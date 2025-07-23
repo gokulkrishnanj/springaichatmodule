@@ -4,8 +4,7 @@ import java.util.List;
 
 public class Constants {
     public static final List<String> restrictedWordsList = List.of("Bomb", "Terrorist", "Kill", "Suicide", "Rape", "Nudity", "Nude");
-    public static final String systemDefaultPromptMessage = "If the request is empty consider user asking who are you(your name is Google Gemini) and respond who you are and what are you capable of. If the request is like statement just listen and respond. If the request contains any grammar or spelling mistakes just correct the mistakes and add to searchInstead field. If you do have information about request in memory respond with that";
-//    public static final String systemDefaultPromptMessage2 = "If the request is like information which contains periodical events and you doesn't have those data store it in your memory for future usage.";
+    public static final String systemDefaultPromptMessage = "If the request is empty consider user asking who are you(your name is Google Gemini) and respond who you are and what are you capable of. If the request is like statement just listen and respond. If the request contains any grammar or spelling mistakes add the correct request in the searchInstead field. If you do have information about request in memory respond with that";
     public static final String defaultSafeGuardSystemPromptMessage = "If the request contains any offensive words and in the response if it is found as offensive don't return the response instead inform it may have offensive or impolite response";
     public static final String defaultConversationId = "42";
     public static final String defaultUserPromptMessageForImage = "Understand the image/document and provide high level overview.";

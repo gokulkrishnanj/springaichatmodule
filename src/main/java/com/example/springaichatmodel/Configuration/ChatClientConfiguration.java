@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 
 @Configuration
 public class ChatClientConfiguration {
@@ -21,7 +23,9 @@ public class ChatClientConfiguration {
 
     @Bean
     public ChatClient customChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
-        return chatClientBuilder.defaultAdvisors(new SafeGuardAdvisor(Constants.restrictedWordsList), new SimpleLoggerAdvisor(), MessageChatMemoryAdvisor.builder(chatMemory).build()).build();
+        return chatClientBuilder.defaultAdvisors(new SafeGuardAdvisor(Constants.restrictedWordsList),
+                new SimpleLoggerAdvisor(),
+                MessageChatMemoryAdvisor.builder(chatMemory).build()).build();
     }
 
 
