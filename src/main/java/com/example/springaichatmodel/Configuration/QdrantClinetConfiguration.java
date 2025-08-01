@@ -19,7 +19,7 @@ public class QdrantClinetConfiguration {
     private String qdrantAPIKey;
 
     @Bean
-    public QdrantClient qdrantClinet(){
+    public QdrantClient qdrantClient(){
         QdrantGrpcClient.Builder qdrantGRPCClientBuilder = QdrantGrpcClient
                 .newBuilder(qdrantHost, qdrantPort);
         qdrantGRPCClientBuilder.withApiKey(qdrantAPIKey);
