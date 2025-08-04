@@ -7,7 +7,6 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SafeGuardAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,7 +24,8 @@ public class ChatClientConfiguration {
     public ChatClient customChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
         return chatClientBuilder.defaultAdvisors(new SafeGuardAdvisor(Constants.restrictedWordsList),
                 new SimpleLoggerAdvisor(),
-                MessageChatMemoryAdvisor.builder(chatMemory).build()).build();
+                MessageChatMemoryAdvisor.builder(chatMemory).build())
+                .build();
     }
 
 

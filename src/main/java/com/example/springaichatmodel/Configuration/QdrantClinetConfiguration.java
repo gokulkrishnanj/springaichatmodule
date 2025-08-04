@@ -22,23 +22,19 @@ public class QdrantClinetConfiguration {
     @Value("${spring.ai.vectorstore.qdrant.api-key}")
     private String qdrantAPIKey;
 
-    @Value("${spring.ai.vectorstore.qdrant.use-tls}")
-    private boolean useTLS;
-
     @Value("${spring.ai.openai.api-key}")
     private String openAiAPIKey;
 
     @Bean
-    public QdrantClient qdrantClient(){
+    public QdrantClient qdrantClient() {
         QdrantGrpcClient.Builder qdrantGRPCClientBuilder = QdrantGrpcClient
-                .newBuilder(qdrantHost, qdrantPort, useTLS);
+                .newBuilder(qdrantHost, qdrantPort, false);
         qdrantGRPCClientBuilder.withApiKey(qdrantAPIKey);
         return new QdrantClient(qdrantGRPCClientBuilder.build());
     }
 
     @Bean
-    public OpenAiApi openAiApi(String openAiAPIKey) {
-        System.out.println("openAIAPIKey:"+openAiAPIKey);
+    public OpenAiApi openAiApi() {
         return OpenAiApi
                 .builder()
                 .apiKey(openAiAPIKey)
