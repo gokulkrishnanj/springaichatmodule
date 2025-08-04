@@ -24,7 +24,7 @@ public class CreatePromptForChat {
         Message userMessage = new UserMessage(message);
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
-        return new Prompt(List.of(systemMessage, userMessage,safeGuardDefaultSystemMessage));
+        return new Prompt(List.of(systemMessage, userMessage, safeGuardDefaultSystemMessage));
     }
 
     public Prompt createPromptForDataExtractionFromImage(MultipartFile file, String message) {

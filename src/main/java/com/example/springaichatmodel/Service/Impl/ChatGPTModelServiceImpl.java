@@ -122,10 +122,10 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     }
 
     @Override
-    public String clearChatMemory(){
+    public String clearChatMemory() {
         chatMemory.clear(Constants.defaultConversationId);
-        if (chatMemory.get(Constants.defaultConversationId).size()==0)
-                return "Memory cleared";
-        return "Try again Data of size "+ chatMemory.get(Constants.defaultConversationId).size()+ " is present";
+        if (chatMemory.get(Constants.defaultConversationId).size() == 0)
+            return "Memory cleared";
+        return "Try again Data of size " + chatMemory.get(Constants.defaultConversationId).size() + " is present";
     }
 }

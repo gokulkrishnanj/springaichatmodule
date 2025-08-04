@@ -21,12 +21,12 @@ public class CloudinaryConfiguration {
     private String api_secret;
 
     @Bean
-    public Cloudinary cloudinaryConfig(){
-        Map<String,String> cloudinaryConfigMap = new HashMap();
+    public Cloudinary cloudinaryConfig() {
+        Map<String, String> cloudinaryConfigMap = new HashMap();
         System.out.println("cloudinary bean creation");
-        cloudinaryConfigMap.put("cloud_name",cloud_name);
-        cloudinaryConfigMap.put("api_key",api_key);
-        cloudinaryConfigMap.put("api_secret",api_secret);
+        cloudinaryConfigMap.put("cloud_name", cloud_name);
+        cloudinaryConfigMap.put("api_key", api_key);
+        cloudinaryConfigMap.put("api_secret", api_secret);
         return new Cloudinary(cloudinaryConfigMap);
     }
 

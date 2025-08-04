@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 public class ManageChatMemoryAdvisor {
 
     @Bean
-    public ChatMemory chatMemory(){
+    public ChatMemory chatMemory() {
         return MessageWindowChatMemory
                 .builder()
                 .maxMessages(10)

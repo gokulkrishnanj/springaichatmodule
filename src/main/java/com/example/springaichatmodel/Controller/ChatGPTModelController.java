@@ -47,7 +47,7 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         return new ResponseEntity<>(chatGPTModelService.getResponseByAnalysingTheMedia(file, instructions), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> clearChatMemory(){
-        return new ResponseEntity<>(chatGPTModelService.clearChatMemory(),HttpStatus.OK);
+    public ResponseEntity<String> clearChatMemory() {
+        return new ResponseEntity<>(chatGPTModelService.clearChatMemory(), HttpStatus.OK);
     }
 }

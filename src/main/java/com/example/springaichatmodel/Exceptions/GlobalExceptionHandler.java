@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NonTransientAiException.class)
-    public ResponseEntity<Map<String,String>> nonTransientAiException(Exception exception){
+    public ResponseEntity<Map<String, String>> nonTransientAiException(Exception exception) {
         log.info("NonTransientAiException");
         Map<String, String> responseMap = new HashMap<>();
         responseMap.put("errorMessage", exception.getLocalizedMessage());
