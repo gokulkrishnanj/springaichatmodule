@@ -11,10 +11,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class QuadrantVectorConfiguration {
 
-    @Value("spring.ai.vectorstore.qdrant.collectionname")
+    @Value("${spring.ai.vectorstore.qdrant.collectionname}")
     private String qdrantCollectionName;
 
-    @Value("spring.ai.openai.api-key")
+    @Value("${spring.ai.openai.api-key}")
     private String embeddingAPIKey;
 
     private QdrantClient qdrantClient;

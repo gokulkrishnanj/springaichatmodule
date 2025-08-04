@@ -9,19 +9,25 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class QdrantClinetConfiguration {
 
-    @Value("spring.ai.vectorstore.qdrant.host")
+    @Value("${spring.ai.vectorstore.qdrant.host}")
     private String qdrantHost;
 
-    @Value("spring.ai.vectorstore.qdrant.port")
+    @Value("${spring.ai.vectorstore.qdrant.port}")
     private int qdrantPort;
 
-    @Value("spring.ai.vectorstore.qdrant.api-key")
+    @Value("${spring.ai.vectorstore.qdrant.api-key}")
     private String qdrantAPIKey;
+
+    @Value("${spring.ai.vectorstore.qdrant.use-tls}")
+    private boolean useTLS;
 
     @Bean
     public QdrantClient qdrantClient(){
+
+        System.out.println("qdrantHost:"+qdrantHost+"qdrantPort:"+qdrantPort+"qdrantAPIKey:"+qdrantAPIKey+"useTLS"+useTLS);
+
         QdrantGrpcClient.Builder qdrantGRPCClientBuilder = QdrantGrpcClient
-                .newBuilder(qdrantHost, qdrantPort);
+                .newBuilder(qdrantHost, qdrantPort, useTLS);
         qdrantGRPCClientBuilder.withApiKey(qdrantAPIKey);
         return new QdrantClient(qdrantGRPCClientBuilder.build());
     }
