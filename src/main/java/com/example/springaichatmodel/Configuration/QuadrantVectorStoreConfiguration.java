@@ -2,7 +2,7 @@ package com.example.springaichatmodel.Configuration;
 
 import io.qdrant.client.QdrantClient;
 import org.springframework.ai.embedding.TokenCountBatchingStrategy;
-import org.springframework.ai.openai.OpenAiEmbeddingModel;
+import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,9 +19,9 @@ public class QuadrantVectorStoreConfiguration {
     private boolean initializeSchema;
 
     @Bean
-    public VectorStore vectorStore(QdrantClient qdrantClient, OpenAiEmbeddingModel openAiEmbeddingModel) {
+    public VectorStore vectorStore(QdrantClient qdrantClient, OllamaEmbeddingModel ollamaEmbeddingModel) {
         return QdrantVectorStore
-                .builder(qdrantClient, openAiEmbeddingModel)
+                .builder(qdrantClient, ollamaEmbeddingModel)
                 .collectionName(qdrantCollectionName)
                 .initializeSchema(initializeSchema)
                 .batchingStrategy(new TokenCountBatchingStrategy())

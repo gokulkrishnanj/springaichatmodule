@@ -24,6 +24,4 @@ public class ChatClientConfiguration {
                         MessageChatMemoryAdvisor.builder(chatMemory).build())
                 .build();
     }
-
-
 }

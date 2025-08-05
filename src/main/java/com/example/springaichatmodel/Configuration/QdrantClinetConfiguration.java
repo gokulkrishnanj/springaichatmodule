@@ -2,10 +2,8 @@ package com.example.springaichatmodel.Configuration;
 
 import io.qdrant.client.QdrantClient;
 import io.qdrant.client.QdrantGrpcClient;
-import org.springframework.ai.document.MetadataMode;
-import org.springframework.ai.openai.OpenAiEmbeddingModel;
-import org.springframework.ai.openai.OpenAiEmbeddingOptions;
-import org.springframework.ai.openai.api.OpenAiApi;
+import org.springframework.ai.ollama.OllamaEmbeddingModel;
+import org.springframework.ai.ollama.api.OllamaApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,9 +20,6 @@ public class QdrantClinetConfiguration {
     @Value("${spring.ai.vectorstore.qdrant.api-key}")
     private String qdrantAPIKey;
 
-    @Value("${spring.ai.openai.api-key}")
-    private String openAiAPIKey;
-
     @Bean
     public QdrantClient qdrantClient() {
         QdrantGrpcClient.Builder qdrantGRPCClientBuilder = QdrantGrpcClient
@@ -34,19 +29,18 @@ public class QdrantClinetConfiguration {
     }
 
     @Bean
-    public OpenAiApi openAiApi() {
-        return OpenAiApi
+    public OllamaApi ollamaApi() {
+        return OllamaApi
                 .builder()
-                .apiKey(openAiAPIKey)
+                .baseUrl("http://localhost:11434")
                 .build();
     }
 
     @Bean
-    public OpenAiEmbeddingModel openAiEmbeddingModel(OpenAiApi openAiApi) {
-        OpenAiEmbeddingOptions openAiEmbeddingOptions = OpenAiEmbeddingOptions
+    public OllamaEmbeddingModel ollamaEmbeddingModel(OllamaApi ollamaApi) {
+        return OllamaEmbeddingModel
                 .builder()
-                .model("text-embedding-3-small")
+                .ollamaApi(ollamaApi)
                 .build();
-        return new OpenAiEmbeddingModel(openAiApi, MetadataMode.EMBED, openAiEmbeddingOptions);
     }
 }
