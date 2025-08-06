@@ -30,8 +30,12 @@ public class CreatePromptForChat {
 
     // Prompt with user message(USER) and System message.
     public Prompt createPromptForRequest(String message) {
+        StringBuilder messageStringBuilder = new StringBuilder(message);
         String similarityFromVectorStore = getSimilarityFromVectorStore(message);
-        Message userMessage = new UserMessage(message + similarityFromVectorStore);
+        if (!similarityFromVectorStore.isBlank()) {
+            messageStringBuilder.append("\n\nRelevant Context:\n").append(similarityFromVectorStore);
+        }
+        Message userMessage = new UserMessage(messageStringBuilder.toString());
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
         return new Prompt(List.of(systemMessage, userMessage, safeGuardDefaultSystemMessage));
@@ -60,12 +64,13 @@ public class CreatePromptForChat {
                 .topK(1)
                 .build();
         List<Document> documentList = vectorStore.similaritySearch(searchRequest);
-        String matchingString = "";
+        StringBuilder matchingStringBuilder = new StringBuilder();
         for (Document document : documentList) {
             if (document != null && document.isText())
-                matchingString = matchingString + document.getText();
+                matchingStringBuilder.append(document.getText()).append("\n");
         }
-        return matchingString;
+        log.info("matchingString:" + matchingStringBuilder);
+        return matchingStringBuilder.toString();
     }
 
 }
