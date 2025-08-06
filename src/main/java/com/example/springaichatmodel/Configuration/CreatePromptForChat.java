@@ -30,12 +30,11 @@ public class CreatePromptForChat {
 
     // Prompt with user message(USER) and System message.
     public Prompt createPromptForRequest(String message) {
-        Message userMessage = new UserMessage(message);
         String similarityFromVectorStore = getSimilarityFromVectorStore(message);
-        Message similarMessage = new UserMessage(similarityFromVectorStore);
+        Message userMessage = new UserMessage(message + similarityFromVectorStore);
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
-        return new Prompt(List.of(systemMessage, userMessage, similarMessage, safeGuardDefaultSystemMessage));
+        return new Prompt(List.of(systemMessage, userMessage, safeGuardDefaultSystemMessage));
     }
 
     public Prompt createPromptForDataExtractionFromImage(MultipartFile file, String message) {
@@ -56,9 +55,9 @@ public class CreatePromptForChat {
     private String getSimilarityFromVectorStore(String message) {
         SearchRequest searchRequest = SearchRequest.builder()
                 .query(message)
-                .similarityThreshold(0.8)
-                .filterExpression(message)
-                .topK(2)
+                .similarityThreshold(1.0)
+//                .filterExpression(message)
+                .topK(1)
                 .build();
         List<Document> documentList = vectorStore.similaritySearch(searchRequest);
         String matchingString = "";
