@@ -35,6 +35,7 @@ public class CreatePromptForChat {
         if (!similarityFromVectorStore.isBlank()) {
             messageStringBuilder.append("\n\nRelevant Context:\n").append(similarityFromVectorStore);
         }
+        log.info("prompt after similarity:"+messageStringBuilder.toString());
         Message userMessage = new UserMessage(messageStringBuilder.toString());
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
