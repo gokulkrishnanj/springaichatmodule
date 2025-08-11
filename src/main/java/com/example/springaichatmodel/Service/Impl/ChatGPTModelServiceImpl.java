@@ -14,6 +14,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.image.*;
 import org.springframework.ai.stabilityai.StabilityAiImageModel;
 import org.springframework.ai.stabilityai.api.StabilityAiImageOptions;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ import java.util.Map;
 public class ChatGPTModelServiceImpl implements ChatGPTModelService {
 
 
+    @Qualifier("geminiAIChatClient")
     private ChatClient chatClient;
     private CreatePromptForChat createPromptForChat;
     private ChatMemory chatMemory;
