@@ -3,7 +3,10 @@ package com.example.springaichatmodel.ETL.Service.Impl;
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import com.example.springaichatmodel.ETL.Service.ETLService;
 import org.springframework.ai.document.Document;
+import org.springframework.ai.document.DocumentReader;
+import org.springframework.ai.reader.TextReader;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -35,6 +38,15 @@ public class ETLServiceImpl implements ETLService {
     @Override
     public ResponseMessageDTO extractDataFromDocument(MultipartFile file) {
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
+        Resource resource = file.getResource();
+        TextReader textReader = new TextReader(resource);
+        List<Document> documentList = textReader.get();
+        if(!documentList.isEmpty()){
+            vectorStore.add(documentList);
+            responseMessageDTO.setMessage("Added to vector store.");
+            return responseMessageDTO;
+        }
+        responseMessageDTO.setMessage("Error while adding to vector store");
         return responseMessageDTO;
     }
 }

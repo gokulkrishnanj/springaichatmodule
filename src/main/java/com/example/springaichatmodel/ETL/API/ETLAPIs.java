@@ -7,13 +7,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-@RestController(value = "${api/v1/ETL}")
+@RequestMapping(value = "${api/v1/ETL}")
 public interface ETLAPIs {
 
-    @PostMapping("${extractDataFromString}")
+    @PostMapping(value = "${extractDataFromString}")
     public ResponseEntity<ResponseMessageDTO> extractDataFromString(@RequestBody List<String> stringList);
 
-    @PostMapping("${extractDataFromDoc}")
+    @PostMapping(value = "${extractDataFromDoc}")
     public ResponseEntity<ResponseMessageDTO> extractDataFromDocument(@RequestParam(value = "file") MultipartFile file);
 
 }
