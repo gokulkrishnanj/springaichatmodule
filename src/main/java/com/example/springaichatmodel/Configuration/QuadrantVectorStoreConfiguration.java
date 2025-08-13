@@ -1,5 +1,6 @@
 package com.example.springaichatmodel.Configuration;
 
+import com.knuddels.jtokkit.api.EncodingType;
 import io.qdrant.client.QdrantClient;
 import org.springframework.ai.embedding.TokenCountBatchingStrategy;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
@@ -24,7 +25,7 @@ public class QuadrantVectorStoreConfiguration {
                 .builder(qdrantClient, ollamaEmbeddingModel)
                 .collectionName(qdrantCollectionName)
                 .initializeSchema(initializeSchema)
-                .batchingStrategy(new TokenCountBatchingStrategy())
+                .batchingStrategy(new TokenCountBatchingStrategy(EncodingType.CL100K_BASE, 100000,0.1))
                 .build();
     }
 
