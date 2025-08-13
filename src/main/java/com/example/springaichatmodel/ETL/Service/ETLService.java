@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ETLService {
 
-    public ResponseMessageDTO extractDataFromString(List<String> stringList);
+    public ResponseMessageDTO extractEmbeddingDataFromString(List<String> stringList);
 
-    public ResponseMessageDTO extractDataFromDocument(MultipartFile file);
+    public ResponseMessageDTO extractEmbeddingDataFromDocument(MultipartFile file);
 }

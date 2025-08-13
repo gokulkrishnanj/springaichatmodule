@@ -11,10 +11,10 @@ import java.util.List;
 @RequestMapping(value = "${api/v1/ETL}")
 public interface ETLAPIs {
 
-    @PostMapping(value = "${extractDataFromString}")
-    public ResponseEntity<ResponseMessageDTO> extractDataFromString(@RequestBody List<String> stringList);
+    @PostMapping(value = "${extractEmbeddingDataFromString}")
+    public ResponseEntity<ResponseMessageDTO> extractEmbeddingDataFromString(@RequestBody List<String> stringList);
 
-    @PostMapping(value = "${extractDataFromDoc}")
-    public ResponseEntity<ResponseMessageDTO> extractDataFromDocument(@RequestParam(value = "document") MultipartFile file);
+    @PostMapping(value = "${extractEmbeddingDataFromDocument}")
+    public ResponseEntity<ResponseMessageDTO> extractEmbeddingDataFromDocument(@RequestParam(value = "document") MultipartFile file);
 
 }

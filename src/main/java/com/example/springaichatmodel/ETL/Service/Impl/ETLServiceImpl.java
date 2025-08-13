@@ -25,7 +25,7 @@ public class ETLServiceImpl implements ETLService {
     }
 
     @Override
-    public ResponseMessageDTO extractDataFromString(List<String> stringList) {
+    public ResponseMessageDTO extractEmbeddingDataFromString(List<String> stringList) {
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
         if (!stringList.isEmpty()) {
             List<Document> documentList = new ArrayList<>();
@@ -39,7 +39,7 @@ public class ETLServiceImpl implements ETLService {
     }
 
     @Override
-    public ResponseMessageDTO extractDataFromDocument(MultipartFile file) {
+    public ResponseMessageDTO extractEmbeddingDataFromDocument(MultipartFile file) {
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
         Resource resource = file.getResource();
         TextReader textReader = new TextReader(resource);

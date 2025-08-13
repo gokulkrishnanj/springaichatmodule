@@ -19,12 +19,12 @@ public class ETLController implements ETLAPIs {
         this.etlService = etlService;
     }
 
-    public ResponseEntity<ResponseMessageDTO> extractDataFromString(List<String> stringList){
-        return new ResponseEntity<>(etlService.extractDataFromString(stringList), HttpStatus.OK);
+    public ResponseEntity<ResponseMessageDTO> extractEmbeddingDataFromString(List<String> stringList){
+        return new ResponseEntity<>(etlService.extractEmbeddingDataFromString(stringList), HttpStatus.OK);
     }
 
-    public ResponseEntity<ResponseMessageDTO> extractDataFromDocument(MultipartFile file) {
-        return new ResponseEntity<>(etlService.extractDataFromDocument(file), HttpStatus.OK);
+    public ResponseEntity<ResponseMessageDTO> extractEmbeddingDataFromDocument(MultipartFile file) {
+        return new ResponseEntity<>(etlService.extractEmbeddingDataFromDocument(file), HttpStatus.OK);
     }
 
 }

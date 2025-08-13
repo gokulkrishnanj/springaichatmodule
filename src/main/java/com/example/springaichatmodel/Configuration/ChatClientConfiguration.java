@@ -28,7 +28,9 @@ public class ChatClientConfiguration {
         return chatClientBuilder
                 .defaultAdvisors(new SafeGuardAdvisor(Constants.restrictedWordsList),
                         new SimpleLoggerAdvisor(),
-                        MessageChatMemoryAdvisor.builder(chatMemory).build())
+                        MessageChatMemoryAdvisor
+                                .builder(chatMemory)
+                                .build())
                 .build();
     }
 
