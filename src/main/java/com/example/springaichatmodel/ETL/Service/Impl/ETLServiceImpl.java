@@ -2,6 +2,8 @@ package com.example.springaichatmodel.ETL.Service.Impl;
 
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import com.example.springaichatmodel.ETL.Service.ETLService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.document.DocumentReader;
 import org.springframework.ai.reader.TextReader;
@@ -15,6 +17,7 @@ import java.util.List;
 
 @Service
 public class ETLServiceImpl implements ETLService {
+    private static final Logger log = LoggerFactory.getLogger(ETLServiceImpl.class);
     private VectorStore vectorStore;
 
     ETLServiceImpl(VectorStore vectorStore) {
@@ -41,10 +44,14 @@ public class ETLServiceImpl implements ETLService {
         Resource resource = file.getResource();
         TextReader textReader = new TextReader(resource);
         List<Document> documentList = textReader.get();
-        if(!documentList.isEmpty()){
-            vectorStore.add(documentList);
-            responseMessageDTO.setMessage("Added to vector store.");
-            return responseMessageDTO;
+        try {
+            if (!documentList.isEmpty()){
+                vectorStore.add(documentList);
+                responseMessageDTO.setMessage("Added to vector store.");
+                return responseMessageDTO;
+            }
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
         }
         responseMessageDTO.setMessage("Error while adding to vector store");
         return responseMessageDTO;
