@@ -45,7 +45,7 @@ public class QuadrantVectorStoreConfiguration {
                 .builder(qdrantClient, ollamaEmbeddingModel)
                 .collectionName(qdrantCollectionName)
                 .initializeSchema(initializeSchema)
-                .batchingStrategy(new TokenCountBatchingStrategy(EncodingType.CL100K_BASE, 100000, 0.1))
+                .batchingStrategy(new TokenCountBatchingStrategy(EncodingType.CL100K_BASE, Integer.MAX_VALUE, 0.1))
                 .build();
     }
 
