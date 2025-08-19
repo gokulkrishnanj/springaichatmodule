@@ -60,7 +60,7 @@ public class CreatePromptForChat {
     private String getSimilarityFromVectorStore(String message) {
         SearchRequest searchRequest = SearchRequest.builder()
                 .query(message)
-                .similarityThreshold(0.8)
+                .similarityThreshold(0.1) // ranges from 0-1 and used 0.1 to get maximum and all possible matchings from vector.
                 .topK(3)
                 .build();
         log.info("searchRequest:" + searchRequest.toString());

@@ -4,6 +4,7 @@ package com.example.springaichatmodel.Controller;
 import com.example.springaichatmodel.API.ChatGPTModelAPI;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.DTO.ImageDetailsDTO;
+import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,7 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         return new ResponseEntity<>(chatGPTModelService.getResponseByAnalysingTheMedia(file, instructions), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> clearChatMemory() {
+    public ResponseEntity<ResponseMessageDTO> clearChatMemory() {
         return new ResponseEntity<>(chatGPTModelService.clearChatMemory(), HttpStatus.OK);
     }
 }
