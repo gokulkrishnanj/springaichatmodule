@@ -3,6 +3,7 @@ package com.example.springaichatmodel.API;
 
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.DTO.ImageDetailsDTO;
+import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import com.example.springaichatmodel.Utils.Constants;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.http.ResponseEntity;
@@ -38,5 +39,5 @@ public interface ChatGPTModelAPI {
                                                                          @RequestParam(value = "instruction", required = false, defaultValue = Constants.defaultUserPromptMessageForImage) String instruction) throws IOException;
 
     @PostMapping(value = "${clearChatMemory}")
-    ResponseEntity<String> clearChatMemory();
+    ResponseEntity<ResponseMessageDTO> clearChatMemory();
 }

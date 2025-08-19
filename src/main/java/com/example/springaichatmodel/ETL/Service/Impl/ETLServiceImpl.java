@@ -5,8 +5,7 @@ import com.example.springaichatmodel.ETL.Service.ETLService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.document.Document;
-import org.springframework.ai.document.DocumentReader;
-import org.springframework.ai.reader.TextReader;
+import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -42,8 +41,8 @@ public class ETLServiceImpl implements ETLService {
     public ResponseMessageDTO extractEmbeddingDataFromDocument(MultipartFile file) {
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
         Resource resource = file.getResource();
-        TextReader textReader = new TextReader(resource);
-        List<Document> documentList = textReader.get();
+        TikaDocumentReader tikaDocumentReader = new TikaDocumentReader(resource);
+        List<Document> documentList = tikaDocumentReader.get();
         try {
             if (!documentList.isEmpty()){
                 vectorStore.add(documentList);

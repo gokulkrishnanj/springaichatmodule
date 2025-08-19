@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.example.springaichatmodel.Configuration.CreatePromptForChat;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.DTO.ImageDetailsDTO;
+import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import com.example.springaichatmodel.Utils.Constants;
 import org.springframework.ai.chat.client.ChatClient;
@@ -124,10 +125,14 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     }
 
     @Override
-    public String clearChatMemory() {
+    public ResponseMessageDTO clearChatMemory() {
+        ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
         chatMemory.clear(Constants.defaultConversationId);
-        if (chatMemory.get(Constants.defaultConversationId).size() == 0)
-            return "Memory cleared";
-        return "Try again Data of size " + chatMemory.get(Constants.defaultConversationId).size() + " is present";
+        if (chatMemory.get(Constants.defaultConversationId).size() == 0) {
+            responseMessageDTO.setMessage("Memory cleared");
+            return responseMessageDTO;
+        }
+        responseMessageDTO.setMessage("Try again Data of size " + chatMemory.get(Constants.defaultConversationId).size() + " is present");
+        return responseMessageDTO;
     }
 }

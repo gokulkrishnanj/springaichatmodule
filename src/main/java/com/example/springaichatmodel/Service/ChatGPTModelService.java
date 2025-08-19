@@ -2,6 +2,7 @@ package com.example.springaichatmodel.Service;
 
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.DTO.ImageDetailsDTO;
+import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,5 +22,5 @@ public interface ChatGPTModelService {
 
     List<ImageDetailsDTO> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException;
 
-    String clearChatMemory();
+    ResponseMessageDTO clearChatMemory();
 }
