@@ -1,6 +1,6 @@
 package com.example.springaichatmodel.ETL.Helper;
 
-import com.example.springaichatmodel.Configuration.TikaDocumentReaderHelper;
+import com.example.springaichatmodel.ETL.Configuration.TikaDocumentReaderConfigHelper;
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
@@ -32,13 +32,11 @@ public class ETLHelper {
             if (!stringList.isEmpty()) {
                 List<Document> documentList = new ArrayList<>();
                 stringList.forEach(string -> documentList.add(new Document(string)));
-                tokenTextSplitter.apply(documentList);
-                vectorStore.add(documentList);
-                responseMessageDTO.setMessage("Data added to the DB.");
-            } else {
-                responseMessageDTO.setMessage("Empty document passed/ Nothing to embed and add to  the DB.");
+                return addEmbeddingDataToTheVectorDatabase(documentList);
             }
-
+            else{
+                responseMessageDTO.setMessage("List is empty.");
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -46,19 +44,24 @@ public class ETLHelper {
     }
 
     public ResponseMessageDTO loadEmbeddingDataIntoVectorStore(Resource resource) {
-        TikaDocumentReader tikaDocumentReader = TikaDocumentReaderHelper.getTikaDocumentReaderInstance(resource);
+        TikaDocumentReader tikaDocumentReader = TikaDocumentReaderConfigHelper.getTikaDocumentReaderInstance(resource);
         List<Document> documentList = tikaDocumentReader.get();
-        tokenTextSplitter.apply(documentList);
+        return addEmbeddingDataToTheVectorDatabase(documentList);
+    }
+
+    private ResponseMessageDTO addEmbeddingDataToTheVectorDatabase(List<Document> documentList){
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
         try {
-            if (!documentList.isEmpty()) {
-                vectorStore.add(documentList);
+            if (documentList!=null && !documentList.isEmpty()){
+                List<Document> splittedTokenDocumentList = tokenTextSplitter.apply(documentList);
+                vectorStore.add(splittedTokenDocumentList);
                 responseMessageDTO.setMessage("Data added to the DB.");
-            } else {
+            }
+            else{
                 responseMessageDTO.setMessage("Empty document passed/ Nothing to embed and add to  the DB.");
             }
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
         return responseMessageDTO;
     }
