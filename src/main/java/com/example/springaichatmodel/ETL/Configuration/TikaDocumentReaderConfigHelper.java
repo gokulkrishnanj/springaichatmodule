@@ -1,11 +1,11 @@
-package com.example.springaichatmodel.Configuration;
+package com.example.springaichatmodel.ETL.Configuration;
 
 import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.core.io.Resource;
 
-public class TikaDocumentReaderHelper {
+public class TikaDocumentReaderConfigHelper {
 
-    private TikaDocumentReaderHelper( ){
+    private TikaDocumentReaderConfigHelper( ){
     }
     private static TikaDocumentReader tikaDocumentReader;
 

@@ -1,7 +1,6 @@
 package com.example.springaichatmodel.ETL.API;
 
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
