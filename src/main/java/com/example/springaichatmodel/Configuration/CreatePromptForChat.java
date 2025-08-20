@@ -35,7 +35,6 @@ public class CreatePromptForChat {
         if (!similarityFromVectorStore.isBlank()) {
             messageStringBuilder.append("\n\nRelevant Context:\n").append(similarityFromVectorStore);
         }
-        log.info("prompt after similarity:" + messageStringBuilder.toString());
         Message userMessage = new UserMessage(messageStringBuilder.toString());
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
@@ -63,7 +62,6 @@ public class CreatePromptForChat {
                 .similarityThreshold(0.1) // ranges from 0-1 and used 0.1 to get maximum and all possible matchings from vector.
                 .topK(3)
                 .build();
-        log.info("searchRequest:" + searchRequest.toString());
         List<Document> documentList = vectorStore.similaritySearch(searchRequest);
         log.info("documentListSize" + documentList.size());
         StringBuilder matchingStringBuilder = new StringBuilder();
@@ -71,7 +69,6 @@ public class CreatePromptForChat {
             if (document != null && document.isText())
                 matchingStringBuilder.append(document.getText()).append("\n");
         }
-        log.info("matchingString:" + matchingStringBuilder);
         return matchingStringBuilder.toString();
     }
 
