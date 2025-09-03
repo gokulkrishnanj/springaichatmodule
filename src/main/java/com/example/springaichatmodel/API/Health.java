@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @RequestMapping(value = "${api/v1}")
 public interface Health {
+
+    //health API
     @GetMapping(value = "${health}")
     public ResponseEntity<String> getHealth();
 }
