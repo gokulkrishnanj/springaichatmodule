@@ -1,9 +1,14 @@
 name: Build on Merge to Main
+run-name: Build after the code merge.
 
 on:
   push:
     branches:
-      - main   # Runs only when code is pushed/merged into main branch
+      - main
+      - master # Runs only when code is pushed/merged into main branch
+#  pull_request_target:
+#    branches:
+#      - main
 
 jobs:
   build:
@@ -25,8 +30,38 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
-      # Step 4: Run the spring project
+      # Step 4: Resolve dependencies
+      - name: Resolve maven dependencies
+        run: mvn dependency:resolve
+
+      # Step 5: Running Qdrant(Vector Database) in local
+      - name: Running Qdrant Docker image
+        run: |
+          docker pull qdrant/qdrant
+          docker run -d -p 6333:6333 qdrant/qdrant
+
+      # Step 6: Qdrant health check
+      - name: Qdrant health check
+        run: http://localhost:6333/healthz
+
+
+
+      # Step 7: Build a JAR
+      - name: Build a .jar of the project
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 3
+          max_attempts: 1
+          command: mvn package
+
+     # Step 8 build docker image
+      - name: Build docker image
+        run: docker build -t springAIChatBot .
+
+      # Step 9 Run the spring project
       - name: Run the spring project
-        timeout_minutes: 10
-        max_attempts: 3
-        run: mvn spring-boot:run
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 3
+          max_attempts: 1
+          command: mvn spring-boot:run
