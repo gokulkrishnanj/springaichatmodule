@@ -36,27 +36,32 @@ jobs:
 
       # Step 5: Running Qdrant(Vector Database) in local
       - name: Running Qdrant Docker image
-        run : |
+        run: |
           docker pull qdrant/qdrant
           docker run -d -p 6333:6333 qdrant/qdrant
 
+      # Step 6: Qdrant health check
+      - name: Qdrant health check
+        run: http://localhost:6333/healthz
 
-      # Step 6: Build a JAR
+
+
+      # Step 7: Build a JAR
       - name: Build a .jar of the project
         uses: nick-fields/retry@v3
         with:
-          timeout_minutes: 10
-          max_attempts: 3
+          timeout_minutes: 3
+          max_attempts: 1
           command: mvn package
 
-     # Step 7 build docker image
+     # Step 8 build docker image
       - name: Build docker image
         run: docker build -t springAIChatBot .
 
-      # Step 8: Run the spring project
+      # Step 9 Run the spring project
       - name: Run the spring project
         uses: nick-fields/retry@v3
         with:
-          timeout_minutes: 10
-          max_attempts: 3
+          timeout_minutes: 3
+          max_attempts: 1
           command: mvn spring-boot:run
