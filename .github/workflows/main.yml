@@ -34,15 +34,26 @@ jobs:
       - name: Resolve maven dependencies
         run: mvn dependency:resolve
 
-      # Step 5: Build a JAR
-      - name: Build a .jar of the project
-        run: mvn package
+      # Step 5: Running Qdrant(Vector Database) in local
+      - name: Running Qdrant Docker image
+        run : |
+          docker pull qdrant/qdrant
+          docker run -d -p 6333:6333 qdrant/qdrant
 
-     # Step 6 build docker image
+
+      # Step 6: Build a JAR
+      - name: Build a .jar of the project
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: mvn package
+
+     # Step 7 build docker image
       - name: Build docker image
         run: docker build -t springAIChatBot .
 
-      # Step 7: Run the spring project
+      # Step 8: Run the spring project
       - name: Run the spring project
         uses: nick-fields/retry@v3
         with:
