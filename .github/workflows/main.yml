@@ -42,7 +42,7 @@ jobs:
 
       # Step 6: Qdrant health check
       - name: Qdrant health check
-        run: http://localhost:6333/healthz
+        run: curl http://localhost:6333/healthz
 
 
 
