@@ -1,9 +1,14 @@
 name: Build on Merge to Main
+run-name: Build after the code merge.
 
 on:
   push:
     branches:
-      - main   # Runs only when code is pushed/merged into main branch
+      - main
+      - master # Runs only when code is pushed/merged into main branch
+#  pull_request_target:
+#    branches:
+#      - main
 
 jobs:
   build:
@@ -25,8 +30,22 @@ jobs:
       - name: Build with Maven
         run: mvn clean install -DskipTests
 
-      # Step 4: Run the spring project
+      # Step 4: Resolve dependencies
+      - name: Resolve maven dependencies
+        run: mvn dependency:resolve
+
+      # Step 5: Build a JAR
+      - name: Build a .jar of the project
+        run: mvn package
+
+     # Step 6 build docker image
+      - name: Build docker image
+        run: docker build -t springAIChatBot .
+
+      # Step 7: Run the spring project
       - name: Run the spring project
-        timeout_minutes: 10
-        max_attempts: 3
-        run: mvn spring-boot:run
+        uses: nick-fields/retry@v3
+        with:
+          timeout_minutes: 10
+          max_attempts: 3
+          command: mvn spring-boot:run
