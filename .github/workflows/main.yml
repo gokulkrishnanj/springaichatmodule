@@ -24,3 +24,7 @@ jobs:
       # Step 3: Build with Maven
       - name: Build with Maven
         run: mvn clean install -DskipTests
+
+      # Step 4: Run the spring project
+      - name: Run the spring project
+        run: mvn spring-boot:run
