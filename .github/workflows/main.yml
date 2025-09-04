@@ -27,4 +27,6 @@ jobs:
 
       # Step 4: Run the spring project
       - name: Run the spring project
+        timeout_minutes: 10
+        max_attempts: 3
         run: mvn spring-boot:run
