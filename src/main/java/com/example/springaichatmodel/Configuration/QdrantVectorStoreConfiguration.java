@@ -26,7 +26,7 @@ public class QdrantVectorStoreConfiguration {
     @Lazy
     public QdrantClient qdrantClient() {
         QdrantGrpcClient.Builder qdrantGRPCClientBuilder = QdrantGrpcClient
-                .newBuilder(qdrantHost, 6334, useTransportLayerSecurity)
+                .newBuilder(qdrantHost, 6334, useTransportLayerSecurity);
         qdrantGRPCClientBuilder.withApiKey(qdrantAPIKey);
         return new QdrantClient(qdrantGRPCClientBuilder.build());
     }
