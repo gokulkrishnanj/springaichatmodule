@@ -37,6 +37,7 @@ jobs:
           echo "CLOUD_NAME=${{secrets.CLOUD_NAME}}" >> $GITHUB_ENV
           echo "CLOUD_API_KEY=${{secrets.CLOUD_API_KEY}}" >> $GITHUB_ENV
           echo "CLOUD_API_SECRET_KEY=${{secrets.CLOUD_API_SECRET_KEY}}" >> $GITHUB_ENV
+          echo "STABILITY_AI_API_KEY=${{secrets.STABILITY_AI_API_KEY}}" >> $GITHUB_ENV
 
       - name: Start Ollama
         run: |
