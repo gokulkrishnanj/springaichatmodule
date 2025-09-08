@@ -1,5 +1,6 @@
 package com.example.springaichatmodel.Configuration;
 
+import com.example.springaichatmodel.ETL.Service.ETLService;
 import com.example.springaichatmodel.Utils.Constants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.messages.Message;
@@ -24,8 +25,11 @@ public class CreatePromptForChat {
 
     private VectorStore vectorStore;
 
-    public CreatePromptForChat(VectorStore vectorStore) {
+    private ETLService etlService;
+
+    public CreatePromptForChat(VectorStore vectorStore, ETLService etlService) {
         this.vectorStore = vectorStore;
+        this.etlService = etlService;
     }
 
     // Prompt with user message(USER) and System message.
@@ -34,6 +38,9 @@ public class CreatePromptForChat {
         String similarityFromVectorStore = getSimilarityFromVectorStore(message);
         if (!similarityFromVectorStore.isBlank()) {
             messageStringBuilder.append("\n\nRelevant Context:\n").append(similarityFromVectorStore);
+        }
+        else{
+            etlService.extractEmbeddingDataFromString(List.of(message));
         }
         Message userMessage = new UserMessage(messageStringBuilder.toString());
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
