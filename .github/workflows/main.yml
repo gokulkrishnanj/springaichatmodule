@@ -1,11 +1,11 @@
-name: Build on Merge to Main
+name: Build project and image
 run-name: Build after the code merge.
 
 on:
   push:
     branches:
-      - main
-      - master # Runs only when code is pushed/merged into main branch
+#      - main
+      - fix/workflow # Runs only when code is pushed/merged into main branch
 #  pull_request_target:
 #    branches:
 #      - main
@@ -17,7 +17,7 @@ jobs:
     steps:
       # Step 1: Checkout the repo
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Setup JDK
       - name: Set up JDK 17
@@ -26,42 +26,39 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # Step 3: Build with Maven
-      - name: Build with Maven
-        run: mvn clean install -DskipTests
-
-      # Step 4: Resolve dependencies
-      - name: Resolve maven dependencies
-        run: mvn dependency:resolve
-
-      # Step 5: Running Qdrant(Vector Database) in local
-      - name: Running Qdrant Docker image
+      # Step3 Initializing variables from env
+      - name: Initializing values to the variables from the env
         run: |
-          docker pull qdrant/qdrant
-          docker run -d -p 6333:6333 qdrant/qdrant
+          echo "QDRANT_HOST=${{secrets.QDRANT_HOST}}" >> $GITHUB_ENV
+          echo "QDRANT_PORT=${{secrets.QDRANT_PORT}}" >> $GITHUB_ENV
+          echo "QDRANT_API=${{secrets.QDRANT_API}}" >> $GITHUB_ENV
+          echo "GEMINI_API=${{secrets.GEMINI_API}}" >> $GITHUB_ENV
+          echo "OPENAI_API=${{secrets.OPENAI_API}}" >> $GITHUB_ENV
 
-      # Step 6: Qdrant health check
-      - name: Qdrant health check
-        run: curl http://localhost:6333/healthz
+      - name: Start Ollama
+        run: |
+          docker pull ollama/ollama:latest
+          docker run -d --name ollama -p 11434:11434 ollama/ollama:latest
+          for i in {1..10}; do
+            if nc -z localhost 11434; then
+              echo "Ollama is up!"
+              break
+            fi
+            sleep 2
+          done
 
+      - name: Build springboot project
+        run: mvn clean install
 
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository_owner }}/springaichatmodule:latest .
 
-      # Step 7: Build a JAR
-      - name: Build a .jar of the project
-        uses: nick-fields/retry@v3
+      - name: Log in to GitHub Packages
+        uses: docker/login-action@v2
         with:
-          timeout_minutes: 3
-          max_attempts: 1
-          command: mvn package
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-     # Step 8 build docker image
-      - name: Build docker image
-        run: docker build -t springAIChatBot .
-
-      # Step 9 Run the spring project
-      - name: Run the spring project
-        uses: nick-fields/retry@v3
-        with:
-          timeout_minutes: 3
-          max_attempts: 1
-          command: mvn spring-boot:run
+      - name: Push Docker image
+        run: docker push ghcr.io/${{ github.repository_owner }}/springaichatmodule:latest
