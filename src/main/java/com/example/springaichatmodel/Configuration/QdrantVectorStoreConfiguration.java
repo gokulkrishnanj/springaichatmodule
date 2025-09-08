@@ -14,7 +14,7 @@ public class QdrantVectorStoreConfiguration {
     private String qdrantHost;
 
     @Value("${spring.ai.vectorstore.qdrant.port}")
-    private int qdrantPort;
+    private String qdrantPort;
 
     @Value("${spring.ai.vectorstore.qdrant.api-key}")
     private String qdrantAPIKey;
@@ -26,7 +26,7 @@ public class QdrantVectorStoreConfiguration {
     @Lazy
     public QdrantClient qdrantClient() {
         QdrantGrpcClient.Builder qdrantGRPCClientBuilder = QdrantGrpcClient
-                .newBuilder(qdrantHost, qdrantPort, useTransportLayerSecurity);
+                .newBuilder(qdrantHost, Integer.valueOf(qdrantPort), useTransportLayerSecurity);
         qdrantGRPCClientBuilder.withApiKey(qdrantAPIKey);
         return new QdrantClient(qdrantGRPCClientBuilder.build());
     }
