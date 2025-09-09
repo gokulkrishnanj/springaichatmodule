@@ -39,6 +39,11 @@ jobs:
           echo "CLOUD_API_SECRET_KEY=${{secrets.CLOUD_API_SECRET_KEY}}" >> $GITHUB_ENV
           echo "STABILITY_AI_API_KEY=${{secrets.STABILITY_AI_API_KEY}}" >> $GITHUB_ENV
 
+      - name: Debug env vars
+        run: |
+          echo "QDRANT_HOST=$QDRANT_HOST"
+          echo "QDRANT_PORT=$QDRANT_PORT"
+
       - name: Start Ollama
         run: |
           docker pull ollama/ollama:latest
