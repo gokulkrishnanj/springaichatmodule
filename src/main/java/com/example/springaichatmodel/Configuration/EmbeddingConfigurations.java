@@ -33,6 +33,7 @@ public class EmbeddingConfigurations {
     }
 
     @Bean
+    @Lazy
     public OllamaEmbeddingModel ollamaEmbeddingModel(OllamaApi ollamaApi, OllamaOptions ollamaOptions) {
         return OllamaEmbeddingModel
                 .builder()
