@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - master # Runs only when code is pushed/merged into main branch
+#      - master # Runs only when code is pushed/merged into main branch
 #  pull_request_target:
 #    branches:
 #      - main
