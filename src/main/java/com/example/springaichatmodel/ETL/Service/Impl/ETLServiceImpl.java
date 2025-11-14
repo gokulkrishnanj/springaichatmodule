@@ -29,6 +29,7 @@ public class ETLServiceImpl implements ETLService {
     public ResponseMessageDTO extractEmbeddingDataFromDocument(MultipartFile file) {
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
         Resource resource = file.getResource();
+        log.info("resourceName:"+resource.getFilename());
         return ETLhelper.loadEmbeddingDataIntoVectorStore(resource);
     }
 }

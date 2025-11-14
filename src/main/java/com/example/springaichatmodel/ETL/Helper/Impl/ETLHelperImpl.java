@@ -3,6 +3,8 @@ package com.example.springaichatmodel.ETL.Helper.Impl;
 import com.example.springaichatmodel.ETL.Configuration.TikaDocumentReaderConfigHelper;
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import com.example.springaichatmodel.ETL.Helper.ETLHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
@@ -12,10 +14,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ETLHelperImpl implements ETLHelper {
 
+    private static final Logger log = LogManager.getLogger(ETLHelperImpl.class);
     //TokenSplitter (Transform)
     private TokenTextSplitter tokenTextSplitter;
 
@@ -49,6 +53,14 @@ public class ETLHelperImpl implements ETLHelper {
     public ResponseMessageDTO loadEmbeddingDataIntoVectorStore(Resource resource) {
         TikaDocumentReader tikaDocumentReader = TikaDocumentReaderConfigHelper.getTikaDocumentReaderInstance(resource);
         List<Document> documentList = tikaDocumentReader.get();
+        log.info("documentList size: " + documentList.size());
+        for (Document document : documentList) {
+            log.info("Loading embedding data into vector store"+document.getText());
+            Map<String, Object> map = document.getMetadata();
+            for(Map.Entry<String, Object> entry : map.entrySet()){
+                log.info("key: "+entry.getKey()+" value: "+entry.getValue());
+            }
+        }
         return addEmbeddingDataToTheVectorDatabase(documentList);
     }
 
