@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class OllamaConfiguration {
     @Bean
-    @Primary
+//    @Primary
     public ChatClient ollamaChatClient(OllamaChatModel ollamaChatModel) {
         return ChatClient.builder(ollamaChatModel).build();
     }
