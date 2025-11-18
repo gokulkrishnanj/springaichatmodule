@@ -15,13 +15,13 @@ import java.util.Map;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, String>> runTimeException(Exception e) {
-        log.info("RuntimeException");
-        Map<String, String> errorResponseMap = new HashMap<>();
-        errorResponseMap.put("errorMessage", e.getLocalizedMessage());
-        return new ResponseEntity<>(errorResponseMap, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(RuntimeException.class)
+//    public ResponseEntity<Map<String, String>> runTimeException(Exception e) {
+//        log.info("RuntimeException");
+//        Map<String, String> errorResponseMap = new HashMap<>();
+//        errorResponseMap.put("errorMessage", e.getLocalizedMessage());
+//        return new ResponseEntity<>(errorResponseMap, HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
     @ExceptionHandler(NonTransientAiException.class)
     public ResponseEntity<Map<String, String>> nonTransientAiException(Exception exception) {

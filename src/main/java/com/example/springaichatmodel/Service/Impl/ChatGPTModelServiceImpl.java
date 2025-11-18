@@ -6,6 +6,7 @@ import com.example.springaichatmodel.Configuration.CreatePromptForChat;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.DTO.ImageDetailsDTO;
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
+import com.example.springaichatmodel.Repository.UserChatMemoryRepository;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import com.example.springaichatmodel.Utils.Constants;
 import org.apache.logging.log4j.LogManager;
