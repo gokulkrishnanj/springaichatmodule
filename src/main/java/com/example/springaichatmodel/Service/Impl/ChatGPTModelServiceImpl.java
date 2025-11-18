@@ -8,6 +8,8 @@ import com.example.springaichatmodel.DTO.ImageDetailsDTO;
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import com.example.springaichatmodel.Utils.Constants;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
@@ -29,6 +31,7 @@ import java.util.Map;
 public class ChatGPTModelServiceImpl implements ChatGPTModelService {
 
 
+    private static final Logger log = LogManager.getLogger(ChatGPTModelServiceImpl.class);
     @Qualifier("geminiAIChatClient")
     private ChatClient chatClient;
     private CreatePromptForChat createPromptForChat;

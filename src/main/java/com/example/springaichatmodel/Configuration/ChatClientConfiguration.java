@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
 
 @Configuration
 public class ChatClientConfiguration {
@@ -28,7 +29,7 @@ public class ChatClientConfiguration {
 
     @Bean(value = "geminiAIChatClient")
     @Lazy
-    @ConditionalOnProperty(name = "spring.ai.openai.api-key")
+    @Primary
     public ChatClient customChatClient(ChatClient.Builder chatClientBuilder, ChatMemory chatMemory) {
         return chatClientBuilder
                 .defaultAdvisors(new SafeGuardAdvisor(Constants.restrictedWordsList),
