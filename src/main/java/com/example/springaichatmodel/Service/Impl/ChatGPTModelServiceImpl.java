@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Service
 public class ChatGPTModelServiceImpl implements ChatGPTModelService {
@@ -76,7 +77,19 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         Prompt prompt = createPromptForChat.createPromptForRequest(message);
         return chatClient
                 .prompt(prompt)
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, Constants.defaultConversationId))
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, "1f0c5e8c-dfb6-4eea-849f-89887583a423"))
+                .call()
+                .entity(new ParameterizedTypeReference<List<ChatPromptDTO>>() {
+                });
+    }
+
+    @Override
+    public List<ChatPromptDTO> newChat(String message) {
+        Prompt prompt = createPromptForChat.createPromptForRequest(message);
+        String conversationId = UUID.randomUUID().toString();
+        return chatClient
+                .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID,conversationId))
                 .call()
                 .entity(new ParameterizedTypeReference<List<ChatPromptDTO>>() {
                 });

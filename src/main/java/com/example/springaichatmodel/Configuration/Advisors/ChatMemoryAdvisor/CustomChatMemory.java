@@ -1,17 +1,17 @@
 package com.example.springaichatmodel.Configuration.Advisors.ChatMemoryAdvisor;
 
 import com.example.springaichatmodel.Document.ChatMemoryDocument;
+import com.example.springaichatmodel.Model.ChatMessage;
 import com.example.springaichatmodel.Repository.UserChatMemoryRepository;
+import com.example.springaichatmodel.Utils.Helper.BuildMessageHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
+import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.messages.SystemMessage;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CustomChatMemory implements ChatMemory {
 
@@ -34,20 +34,49 @@ public class CustomChatMemory implements ChatMemory {
 
 
     @Override
-    public void add(String conversationId, List<Message> messages) {
-        List<ChatMemoryDocument> chatMemoryDocumentList = userChatMemoryRepository.findByUserIdAndConversationId(userId, conversationId);
-        List<Message> memoryDocumentList = chatMemoryDocumentList.get(0).getChatMessageList();
-        List<Message> processedMessage = process(messages,memoryDocumentList);
-        chatMemoryDocumentList.get(0).setChatMessageList(processedMessage);
-        ChatMemoryDocument chatMemoryDocument = chatMemoryDocumentList.get(0);
+    public void add(String conversationId, List<Message> newMessages) {
+        log.info("inside the add method and conversationId:"+conversationId);
+//        newMessages.forEach(message -> {
+//            log.info("adding a message:"+message.getMessageType().getValue()+"text:"+message.getText());
+//        });
+        ChatMemoryDocument chatMemoryDocument = userChatMemoryRepository.findByUserIdAndConversationId(userId, conversationId);
+        if(chatMemoryDocument==null){
+            List<ChatMessage> chatMessages = new ArrayList<>();
+            chatMessages=process(new ArrayList<>(),newMessages);
+            ChatMemoryDocument newChatMemoryDocument = new ChatMemoryDocument();
+            newChatMemoryDocument.setUserId(userId);
+            newChatMemoryDocument.setConversationId(conversationId);
+            newChatMemoryDocument.setChatMessages(chatMessages);
+            userChatMemoryRepository.save(newChatMemoryDocument);
+            return;
+        }
+        List<ChatMessage> chatMessageList = chatMemoryDocument.getChatMessages();
+        List<Message> oldMessages = chatMessageList.stream()
+                .map(chatMessage -> {
+                    BuildMessageHelper helper = new BuildMessageHelper(chatMessage.getRole(),chatMessage.getContent(),chatMessage.getMetadata());
+                    return helper.buildMessage();
+                }).toList();
+        List<ChatMessage> processedMessages = process(oldMessages, newMessages);
+        chatMessageList=processedMessages;
+        chatMemoryDocument.setChatMessages(chatMessageList);
         userChatMemoryRepository.save(chatMemoryDocument);
     }
 
     @Override
     public List<Message> get(String conversationId) {
-        log.info("conversationId::::"+conversationId);
-        List<ChatMemoryDocument> chatMemoryDocumentList = userChatMemoryRepository.findByUserIdAndConversationId(userId, conversationId);
-        return chatMemoryDocumentList.get(0).getChatMessageList();
+        log.info("inside the get method and conversationId"+conversationId);
+        ChatMemoryDocument chatMemoryDocument = userChatMemoryRepository.findByUserIdAndConversationId(userId, conversationId);
+        if(chatMemoryDocument==null){
+            return new ArrayList<Message>();
+        }
+        List<ChatMessage> chatMessageList = chatMemoryDocument.getChatMessages();
+        return chatMessageList
+                .stream()
+                .map(chatMessage -> {
+                    BuildMessageHelper buildMessageHelper = new BuildMessageHelper(chatMessage.getRole(),chatMessage.getContent(),chatMessage.getMetadata());
+                    return buildMessageHelper.buildMessage();
+
+                }).toList();
     }
 
     @Override
@@ -55,19 +84,24 @@ public class CustomChatMemory implements ChatMemory {
         userChatMemoryRepository.deleteChatMemoryDocumentByUserIdAndConversationId(userId,conversationId);
     }
 
-    private List<Message> process(List<Message> memoryMessages, List<Message> newMessages) {
-        List<Message> processedMessages = new ArrayList<>();
-
-        Set<Message> memoryMessagesSet = new HashSet<>(memoryMessages);
+    private List<ChatMessage> process(List<Message> oldMessages, List<Message> newMessages) {
+        List<ChatMessage> processedMessages = new ArrayList<>();
+        Set<Message> oldMemoryMessagesSet = new HashSet<>(oldMessages);
         boolean hasNewSystemMessage = newMessages.stream()
                 .filter(SystemMessage.class::isInstance)
-                .anyMatch(message -> !memoryMessagesSet.contains(message));
+                .anyMatch(message -> !oldMemoryMessagesSet.contains(message));
 
-        memoryMessages.stream()
+        oldMessages.stream()
                 .filter(message -> !(hasNewSystemMessage && message instanceof SystemMessage))
-                .forEach(processedMessages::add);
-
-        processedMessages.addAll(newMessages);
+                .forEach((message -> {
+                    ChatMessage chatMessage = new ChatMessage(message);
+                    processedMessages.add(chatMessage);
+                }));
+        newMessages.stream()
+                        .forEach(message -> {
+                            ChatMessage chatMessage = new ChatMessage(message);
+                            processedMessages.add(chatMessage);
+                        });
 
         if (processedMessages.size() <= this.maxMessage) {
             return processedMessages;
@@ -75,10 +109,10 @@ public class CustomChatMemory implements ChatMemory {
 
         int messagesToRemove = processedMessages.size() - this.maxMessage;
 
-        List<Message> trimmedMessages = new ArrayList<>();
+        List<ChatMessage> trimmedMessages = new ArrayList<>();
         int removed = 0;
-        for (Message message : processedMessages) {
-            if (message instanceof SystemMessage || removed >= messagesToRemove) {
+        for (ChatMessage message : processedMessages) {
+            if (message.getRole().equals(MessageType.SYSTEM) || removed >= messagesToRemove) {
                 trimmedMessages.add(message);
             }
             else {

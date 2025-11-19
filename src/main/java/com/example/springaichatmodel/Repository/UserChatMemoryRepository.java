@@ -9,7 +9,7 @@ import java.util.List;
 @Repository
 public interface UserChatMemoryRepository extends MongoRepository<ChatMemoryDocument, String> {
 
-    List<ChatMemoryDocument> findByUserIdAndConversationId(String userId, String conversationId);
+    ChatMemoryDocument findByUserIdAndConversationId(String userId, String conversationId);
 
     void deleteChatMemoryDocumentByUserIdAndConversationId(String userId, String conversationId);
 }

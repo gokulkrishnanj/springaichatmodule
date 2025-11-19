@@ -17,10 +17,11 @@ import java.util.List;
 public class ChatMemoryDocument {
 
     @Id
+    private String id;
+
     private String userId;
 
     private String conversationId;
 
-    private List<Message> chatMessageList;
-
+    private List<ChatMessage>  chatMessages;
 }
