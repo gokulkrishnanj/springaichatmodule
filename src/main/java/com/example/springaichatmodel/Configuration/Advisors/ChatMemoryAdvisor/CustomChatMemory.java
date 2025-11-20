@@ -13,13 +13,14 @@ import org.springframework.ai.chat.messages.SystemMessage;
 
 import java.util.*;
 
+import static com.example.springaichatmodel.Utils.Constants.userId;
+
+
 public class CustomChatMemory implements ChatMemory {
 
     public static final int DEFAULT_MAX_MESSAGE= 10;
     private static final Logger log = LogManager.getLogger(CustomChatMemory.class);
     private final int maxMessage;
-    private String userId = "123421";
-
     private UserChatMemoryRepository userChatMemoryRepository;
 
     public CustomChatMemory(UserChatMemoryRepository userChatMemoryRepository,int maxMessage) {
@@ -35,7 +36,6 @@ public class CustomChatMemory implements ChatMemory {
 
     @Override
     public void add(String conversationId, List<Message> newMessages) {
-        log.info("inside the add method and conversationId:"+conversationId);
 //        newMessages.forEach(message -> {
 //            log.info("adding a message:"+message.getMessageType().getValue()+"text:"+message.getText());
 //        });
@@ -64,7 +64,6 @@ public class CustomChatMemory implements ChatMemory {
 
     @Override
     public List<Message> get(String conversationId) {
-        log.info("inside the get method and conversationId"+conversationId);
         ChatMemoryDocument chatMemoryDocument = userChatMemoryRepository.findByUserIdAndConversationId(userId, conversationId);
         if(chatMemoryDocument==null){
             return new ArrayList<Message>();

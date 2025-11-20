@@ -3,6 +3,7 @@ package com.example.springaichatmodel.Configuration;
 import com.example.springaichatmodel.ETL.Service.ETLService;
 import com.example.springaichatmodel.Utils.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.Prompt;
@@ -19,6 +20,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.HashMap;
 import java.util.List;
 
+import static com.example.springaichatmodel.Utils.Constants.userId;
+
 @Slf4j
 @Component
 public class CreatePromptForChat {
@@ -27,21 +30,35 @@ public class CreatePromptForChat {
 
     private ETLService etlService;
 
-    public CreatePromptForChat(VectorStore vectorStore, ETLService etlService) {
+    private ChatMemory chatMemory;
+
+    public CreatePromptForChat(VectorStore vectorStore, ETLService etlService, ChatMemory chatMemory) {
         this.vectorStore = vectorStore;
         this.etlService = etlService;
+        this.chatMemory = chatMemory;
     }
 
     // Prompt with user message(USER) and System message.
-    public Prompt createPromptForRequest(String message) {
+    public Prompt createPromptForRequest(String message, boolean isNewChat) {
         StringBuilder messageStringBuilder = new StringBuilder(message);
-        String similarityFromVectorStore = getSimilarityFromVectorStore(message);
-        if (!similarityFromVectorStore.isBlank()) {
-            messageStringBuilder.append("\n\nRelevant Context:\n").append(similarityFromVectorStore);
+        // checking whether the chat is newChat or old chat (if old it will look in the chatmemory and get the similarity)
+        if(!isNewChat){
+            StringBuilder chatMemoryStringBuilder = new StringBuilder();
+            List<Message> messageList = chatMemory.get(userId);
+            messageList.forEach(messageData -> {
+                chatMemoryStringBuilder.append(messageData.getText());
+            });
+            if(!chatMemoryStringBuilder.isEmpty()){
+                messageStringBuilder.append(chatMemoryStringBuilder);
+            }
+            String similarityFromVectorStore = getSimilarityFromVectorStore(message);
+            log.info("similarityFromVectorStore:{}",similarityFromVectorStore);
+            if (!similarityFromVectorStore.isBlank()) {
+                messageStringBuilder.append("\n\nRelevant Context:\n").append(similarityFromVectorStore);
+            }
+
         }
-        else{
-            etlService.extractEmbeddingDataFromString(List.of(message));
-        }
+        etlService.extractEmbeddingDataFromString(List.of(message));
         Message userMessage = new UserMessage(messageStringBuilder.toString());
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
@@ -68,6 +85,7 @@ public class CreatePromptForChat {
                 .query(message)
                 .similarityThreshold(0.5) // ranges from 0-1 and used 0.1 to get maximum and all possible matching from vector.
                 .topK(3)
+                .filterExpression("metadata.userId == '" + userId + "'")
                 .build();
         List<Document> documentList = vectorStore.similaritySearch(searchRequest);
         log.info("documentListSize" + documentList.size());
