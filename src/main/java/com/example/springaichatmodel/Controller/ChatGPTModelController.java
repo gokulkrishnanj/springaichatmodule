@@ -51,4 +51,8 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
     public ResponseEntity<ResponseMessageDTO> clearChatMemory() {
         return new ResponseEntity<>(chatGPTModelService.clearChatMemory(), HttpStatus.OK);
     }
+
+    public ResponseEntity<List<ChatPromptDTO>> newChat(ChatPromptDTO chatPromptDTO){
+        return new ResponseEntity<>(chatGPTModelService.newChat(chatPromptDTO.getQuestion()), HttpStatus.OK);
+    }
 }

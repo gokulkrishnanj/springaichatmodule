@@ -27,6 +27,9 @@ public interface ChatGPTModelAPI {
     @PostMapping(value = "${getResponseAsGenerics}")
     ResponseEntity<List<ChatPromptDTO>> getResponseAsGenerics(@RequestBody ChatPromptDTO chatPromptDTO);
 
+    @PostMapping(value = "${newChat}")
+    ResponseEntity<List<ChatPromptDTO>> newChat(@RequestBody ChatPromptDTO chatPromptDTO);
+
     //API to get contents in the chat memory.
     @GetMapping(value = "${getContentsInMemory}")
     ResponseEntity<List<Message>> getContentsInMemory();
