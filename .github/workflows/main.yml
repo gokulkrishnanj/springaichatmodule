@@ -4,7 +4,7 @@ run-name: Build after the code merge.
 on:
   push:
     branches:
-      - main
+#      - main
 #      - master # Runs only when code is pushed/merged into main branch
 #  pull_request_target:
 #    branches:

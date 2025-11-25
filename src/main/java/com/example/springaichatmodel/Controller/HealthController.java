@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HealthController implements Health {
     public ResponseEntity<String> getHealth() {
-        log.info("Health Controller");
         return new ResponseEntity<>("Health", HttpStatus.OK);
     }
 }
