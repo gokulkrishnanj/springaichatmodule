@@ -58,14 +58,16 @@ public class ETLHelperImpl implements ETLHelper {
     @Override
     public ResponseMessageDTO loadEmbeddingDataIntoVectorStore(Resource resource) {
         TikaDocumentReader tikaDocumentReader = TikaDocumentReaderConfigHelper.getTikaDocumentReaderInstance(resource);
+        List<Document> newDocumentList = new ArrayList<>();
         List<Document> documentList = tikaDocumentReader.get();
         log.info("documentList size: " + documentList.size());
         for (Document document : documentList) {
-            Map<String, Object> map = document.getMetadata();
+            Map<String, Object> map = new HashMap<>();
             map.put("userId", userId);
             map.put("docName", resource.getFilename());
+            newDocumentList.add(new Document(document.getText(), map));
         }
-        return addEmbeddingDataToTheVectorDatabase(documentList);
+        return addEmbeddingDataToTheVectorDatabase(newDocumentList);
     }
 
     private ResponseMessageDTO addEmbeddingDataToTheVectorDatabase(List<Document> documentList){

@@ -43,14 +43,14 @@ public class CreatePromptForChat {
         StringBuilder messageStringBuilder = new StringBuilder(message);
         // checking whether the chat is newChat or old chat (if old it will look in the chatmemory and get the similarity)
         if(!isNewChat){
-            StringBuilder chatMemoryStringBuilder = new StringBuilder();
-            List<Message> messageList = chatMemory.get(userId);
-            messageList.forEach(messageData -> {
-                chatMemoryStringBuilder.append(messageData.getText());
-            });
-            if(!chatMemoryStringBuilder.isEmpty()){
-                messageStringBuilder.append(chatMemoryStringBuilder);
-            }
+//            StringBuilder chatMemoryStringBuilder = new StringBuilder();
+//            List<Message> messageList = chatMemory.get(userId);
+//            messageList.forEach(messageData -> {
+//                chatMemoryStringBuilder.append(messageData.getText());
+//            });
+//            if(!chatMemoryStringBuilder.isEmpty()){
+//                messageStringBuilder.append(chatMemoryStringBuilder);
+//            }
             String similarityFromVectorStore = getSimilarityFromVectorStore(message);
             log.info("similarityFromVectorStore:{}",similarityFromVectorStore);
             if (!similarityFromVectorStore.isBlank()) {
@@ -58,7 +58,7 @@ public class CreatePromptForChat {
             }
 
         }
-        etlService.extractEmbeddingDataFromString(List.of(message));
+//        etlService.extractEmbeddingDataFromString(List.of(message));
         Message userMessage = new UserMessage(messageStringBuilder.toString());
         Message systemMessage = new SystemPromptTemplate(Constants.systemDefaultPromptMessage).createMessage();
         Message safeGuardDefaultSystemMessage = new SystemPromptTemplate(Constants.defaultSafeGuardSystemPromptMessage).createMessage();
@@ -83,9 +83,9 @@ public class CreatePromptForChat {
     private String getSimilarityFromVectorStore(String message) {
         SearchRequest searchRequest = SearchRequest.builder()
                 .query(message)
-                .similarityThreshold(0.5) // ranges from 0-1 and used 0.1 to get maximum and all possible matching from vector.
+                .similarityThreshold(0.2)
                 .topK(3)
-                .filterExpression("metadata.userId == '" + userId + "'")
+                .filterExpression("userId == '" + userId + "'")
                 .build();
         List<Document> documentList = vectorStore.similaritySearch(searchRequest);
         log.info("documentListSize" + documentList.size());

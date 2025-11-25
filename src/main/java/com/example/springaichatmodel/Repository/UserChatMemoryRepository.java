@@ -13,7 +13,5 @@ public interface UserChatMemoryRepository extends MongoRepository<ChatMemoryDocu
 
     void deleteChatMemoryDocumentByUserIdAndConversationId(String userId, String conversationId);
 
-//    List<ChatMemoryDocument> findByUserId(String userId);
-
     List<ChatMemoryDocument> findByUserId(String userId);
 }
