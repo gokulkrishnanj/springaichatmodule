@@ -25,4 +25,6 @@ public interface ChatGPTModelService {
     ResponseMessageDTO clearChatMemory();
 
     List<ChatPromptDTO> newChat(String message);
+
+    List<String> getAllConversationIds();
 }

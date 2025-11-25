@@ -6,6 +6,7 @@ import com.example.springaichatmodel.Configuration.CreatePromptForChat;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.DTO.ImageDetailsDTO;
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
+import com.example.springaichatmodel.Document.ChatMemoryDocument;
 import com.example.springaichatmodel.Repository.UserChatMemoryRepository;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import com.example.springaichatmodel.Utils.Constants;
@@ -42,17 +43,20 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     private ChatMemory chatMemory;
     private StabilityAiImageModel stabilityAiImageModel;
     private Cloudinary cloudinary;
+    private UserChatMemoryRepository userChatMemoryRepository;
 
     ChatGPTModelServiceImpl(ChatClient chatClient,
                             CreatePromptForChat createPromptForChat,
                             ChatMemory chatMemory,
                             StabilityAiImageModel stabilityAiImageModel,
-                            Cloudinary cloudinary) {
+                            Cloudinary cloudinary,
+                            UserChatMemoryRepository userChatMemoryRepository) {
         this.chatClient = chatClient;
         this.createPromptForChat = createPromptForChat;
         this.chatMemory = chatMemory;
         this.stabilityAiImageModel = stabilityAiImageModel;
         this.cloudinary = cloudinary;
+        this.userChatMemoryRepository = userChatMemoryRepository;
     }
 
     @Override
@@ -153,5 +157,20 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
         }
         responseMessageDTO.setMessage("Try again Data of size " + chatMemory.get(userId).size() + " is present");
         return responseMessageDTO;
+    }
+
+    @Override
+    public List<String> getAllConversationIds() {
+        List<String>  conversationIdList = new ArrayList<>();
+        List<ChatMemoryDocument> chatMemoryDocumentList = userChatMemoryRepository.findByUserId(userId);
+        if(chatMemoryDocumentList!=null && !chatMemoryDocumentList.isEmpty()){
+            log.info("not null");
+            conversationIdList = chatMemoryDocumentList.stream()
+                    .map(chatMemoryDocument -> {
+                        return chatMemoryDocument.getConversationId();
+                    })
+                    .toList();
+        }
+        return conversationIdList;
     }
 }
