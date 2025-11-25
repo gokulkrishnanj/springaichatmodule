@@ -43,4 +43,7 @@ public interface ChatGPTModelAPI {
 
     @PostMapping(value = "${clearChatMemory}")
     ResponseEntity<ResponseMessageDTO> clearChatMemory();
+
+    @GetMapping(value = "${getAllConversationIds}")
+    ResponseEntity<List<String>> getAllConversationIds();
 }
