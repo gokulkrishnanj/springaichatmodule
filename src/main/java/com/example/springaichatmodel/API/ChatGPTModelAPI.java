@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@RequestMapping(value = "${api/v1}")
+@RequestMapping(value = "${api/v1/chat}")
 public interface ChatGPTModelAPI {
     //API to get the response from AImodel as a String.
     @PostMapping(value = "${getResponseAsString}")
