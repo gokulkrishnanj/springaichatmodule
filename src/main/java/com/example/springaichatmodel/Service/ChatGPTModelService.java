@@ -23,4 +23,8 @@ public interface ChatGPTModelService {
     List<ImageDetailsDTO> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException;
 
     ResponseMessageDTO clearChatMemory();
+
+    List<ChatPromptDTO> newChat(String message);
+
+    List<String> getAllConversationIds();
 }

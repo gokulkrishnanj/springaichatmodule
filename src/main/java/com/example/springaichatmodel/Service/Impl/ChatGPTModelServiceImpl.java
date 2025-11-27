@@ -6,6 +6,8 @@ import com.example.springaichatmodel.Configuration.CreatePromptForChat;
 import com.example.springaichatmodel.DTO.ChatPromptDTO;
 import com.example.springaichatmodel.DTO.ImageDetailsDTO;
 import com.example.springaichatmodel.DTO.ResponseMessageDTO;
+import com.example.springaichatmodel.Document.ChatMemoryDocument;
+import com.example.springaichatmodel.Repository.UserChatMemoryRepository;
 import com.example.springaichatmodel.Service.ChatGPTModelService;
 import com.example.springaichatmodel.Utils.Constants;
 import org.apache.logging.log4j.LogManager;
@@ -26,6 +28,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
+import static com.example.springaichatmodel.Utils.Constants.userId;
 
 @Service
 public class ChatGPTModelServiceImpl implements ChatGPTModelService {
@@ -38,22 +43,25 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     private ChatMemory chatMemory;
     private StabilityAiImageModel stabilityAiImageModel;
     private Cloudinary cloudinary;
+    private UserChatMemoryRepository userChatMemoryRepository;
 
     ChatGPTModelServiceImpl(ChatClient chatClient,
                             CreatePromptForChat createPromptForChat,
                             ChatMemory chatMemory,
                             StabilityAiImageModel stabilityAiImageModel,
-                            Cloudinary cloudinary) {
+                            Cloudinary cloudinary,
+                            UserChatMemoryRepository userChatMemoryRepository) {
         this.chatClient = chatClient;
         this.createPromptForChat = createPromptForChat;
         this.chatMemory = chatMemory;
         this.stabilityAiImageModel = stabilityAiImageModel;
         this.cloudinary = cloudinary;
+        this.userChatMemoryRepository = userChatMemoryRepository;
     }
 
     @Override
     public String getResponseAsString(String message) {
-        Prompt prompt = createPromptForChat.createPromptForRequest(message);
+        Prompt prompt = createPromptForChat.createPromptForRequest(message,false);
         return chatClient
                 .prompt(prompt)
                 .call()
@@ -62,7 +70,7 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
 
     @Override
     public ChatPromptDTO getResponseAsEntity(String message) {
-        Prompt prompt = createPromptForChat.createPromptForRequest(message);
+        Prompt prompt = createPromptForChat.createPromptForRequest(message,false);
         return chatClient
                 .prompt(prompt)
                 .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, Constants.defaultConversationId))
@@ -72,10 +80,22 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
 
     @Override
     public List<ChatPromptDTO> getResponseAsGenerics(String message) {
-        Prompt prompt = createPromptForChat.createPromptForRequest(message);
+        Prompt prompt = createPromptForChat.createPromptForRequest(message,false);
         return chatClient
                 .prompt(prompt)
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, Constants.defaultConversationId))
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userId))
+                .call()
+                .entity(new ParameterizedTypeReference<List<ChatPromptDTO>>() {
+                });
+    }
+
+    @Override
+    public List<ChatPromptDTO> newChat(String message) {
+        Prompt prompt = createPromptForChat.createPromptForRequest(message, true);
+        String conversationId = UUID.randomUUID().toString();
+        return chatClient
+                .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID,conversationId))
                 .call()
                 .entity(new ParameterizedTypeReference<List<ChatPromptDTO>>() {
                 });
@@ -83,7 +103,7 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
 
     @Override
     public List<Message> getContentsInMemory() {
-        return chatMemory.get(Constants.defaultConversationId);
+        return chatMemory.get(userId);
     }
 
     //need to handle the url issue.
@@ -130,12 +150,27 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     @Override
     public ResponseMessageDTO clearChatMemory() {
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
-        chatMemory.clear(Constants.defaultConversationId);
-        if (chatMemory.get(Constants.defaultConversationId).size() == 0) {
+        chatMemory.clear(userId);
+        if (chatMemory.get(userId).size() == 0) {
             responseMessageDTO.setMessage("Memory cleared");
             return responseMessageDTO;
         }
-        responseMessageDTO.setMessage("Try again Data of size " + chatMemory.get(Constants.defaultConversationId).size() + " is present");
+        responseMessageDTO.setMessage("Try again Data of size " + chatMemory.get(userId).size() + " is present");
         return responseMessageDTO;
+    }
+
+    @Override
+    public List<String> getAllConversationIds() {
+        List<String>  conversationIdList = new ArrayList<>();
+        List<ChatMemoryDocument> chatMemoryDocumentList = userChatMemoryRepository.findByUserId(userId);
+        if(chatMemoryDocumentList!=null && !chatMemoryDocumentList.isEmpty()){
+            log.info("not null");
+            conversationIdList = chatMemoryDocumentList.stream()
+                    .map(chatMemoryDocument -> {
+                        return chatMemoryDocument.getConversationId();
+                    })
+                    .toList();
+        }
+        return conversationIdList;
     }
 }
