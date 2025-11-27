@@ -13,14 +13,13 @@ import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.MimeType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
-
-import static com.example.springaichatmodel.Utils.Constants.userId;
 
 @Slf4j
 @Component
@@ -81,6 +80,7 @@ public class CreatePromptForChat {
     }
 
     private String getSimilarityFromVectorStore(String message) {
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         SearchRequest searchRequest = SearchRequest.builder()
                 .query(message)
                 .similarityThreshold(0.2)

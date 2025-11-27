@@ -24,20 +24,20 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         this.chatGPTModelService = chatGPTModelService;
     }
 
-    public ResponseEntity<String> getResponseAsString(ChatPromptDTO chatPromptDTO) {
-        return new ResponseEntity<>(chatGPTModelService.getResponseAsString(chatPromptDTO.getQuestion()), HttpStatus.OK);
+    public ResponseEntity<String> getResponseAsString(ChatPromptDTO chatPromptDTO, String conversationId) {
+        return new ResponseEntity<>(chatGPTModelService.getResponseAsString(chatPromptDTO.getQuestion(), conversationId), HttpStatus.OK);
     }
 
-    public ResponseEntity<ChatPromptDTO> getResponseAsEntity(ChatPromptDTO chatPromptDTO) {
-        return new ResponseEntity<>(chatGPTModelService.getResponseAsEntity(chatPromptDTO.getQuestion()), HttpStatus.OK);
+    public ResponseEntity<ChatPromptDTO> getResponseAsEntity(ChatPromptDTO chatPromptDTO, String conversationId) {
+        return new ResponseEntity<>(chatGPTModelService.getResponseAsEntity(chatPromptDTO.getQuestion(), conversationId), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<ChatPromptDTO>> getResponseAsGenerics(ChatPromptDTO chatPromptDTO) {
-        return new ResponseEntity<>(chatGPTModelService.getResponseAsGenerics(chatPromptDTO.getQuestion()), HttpStatus.OK);
+    public ResponseEntity<List<ChatPromptDTO>> getResponseAsGenerics(ChatPromptDTO chatPromptDTO, String conversationId) {
+        return new ResponseEntity<>(chatGPTModelService.getResponseAsGenerics(chatPromptDTO.getQuestion(), conversationId), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<Message>> getContentsInMemory() {
-        return new ResponseEntity<>(chatGPTModelService.getContentsInMemory(), HttpStatus.OK);
+    public ResponseEntity<List<Message>> getContentsInMemory(String conversationId) {
+        return new ResponseEntity<>(chatGPTModelService.getContentsInMemory(conversationId), HttpStatus.OK);
     }
 
     public ResponseEntity<List<String>> generateImageFromInstruction(String instruction) {
@@ -48,8 +48,8 @@ public class ChatGPTModelController implements ChatGPTModelAPI {
         return new ResponseEntity<>(chatGPTModelService.getResponseByAnalysingTheMedia(file, instructions), HttpStatus.OK);
     }
 
-    public ResponseEntity<ResponseMessageDTO> clearChatMemory() {
-        return new ResponseEntity<>(chatGPTModelService.clearChatMemory(), HttpStatus.OK);
+    public ResponseEntity<ResponseMessageDTO> clearChatMemory(String conversationId) {
+        return new ResponseEntity<>(chatGPTModelService.clearChatMemory(conversationId), HttpStatus.OK);
     }
 
     public ResponseEntity<List<ChatPromptDTO>> newChat(ChatPromptDTO chatPromptDTO){

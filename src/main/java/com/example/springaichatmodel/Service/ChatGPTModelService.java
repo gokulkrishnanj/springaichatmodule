@@ -10,19 +10,19 @@ import java.io.IOException;
 import java.util.List;
 
 public interface ChatGPTModelService {
-    String getResponseAsString(String message);
+    String getResponseAsString(String message,  String conversationId);
 
-    ChatPromptDTO getResponseAsEntity(String message);
+    ChatPromptDTO getResponseAsEntity(String message,  String conversationId);
 
-    List<ChatPromptDTO> getResponseAsGenerics(String message);
+    List<ChatPromptDTO> getResponseAsGenerics(String message,  String conversationId);
 
-    List<Message> getContentsInMemory();
+    List<Message> getContentsInMemory(String conversationId);
 
     List<String> generateImageFromInstruction(String instruction);
 
     List<ImageDetailsDTO> getResponseByAnalysingTheMedia(MultipartFile file, String instructions) throws IOException;
 
-    ResponseMessageDTO clearChatMemory();
+    ResponseMessageDTO clearChatMemory(String conversationId);
 
     List<ChatPromptDTO> newChat(String message);
 

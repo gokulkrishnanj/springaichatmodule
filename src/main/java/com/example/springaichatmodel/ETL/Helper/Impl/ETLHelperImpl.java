@@ -10,14 +10,13 @@ import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.Resource;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.example.springaichatmodel.Utils.Constants.userId;
 
 @Service
 public class ETLHelperImpl implements ETLHelper {
@@ -36,6 +35,7 @@ public class ETLHelperImpl implements ETLHelper {
 
     @Override
     public ResponseMessageDTO loadEmbeddingDataIntoVectorStore(List<String> stringList) {
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
         try {
             if (!stringList.isEmpty()) {
@@ -57,6 +57,7 @@ public class ETLHelperImpl implements ETLHelper {
 
     @Override
     public ResponseMessageDTO loadEmbeddingDataIntoVectorStore(Resource resource) {
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         TikaDocumentReader tikaDocumentReader = TikaDocumentReaderConfigHelper.getTikaDocumentReaderInstance(resource);
         List<Document> newDocumentList = new ArrayList<>();
         List<Document> documentList = tikaDocumentReader.get();

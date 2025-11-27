@@ -10,5 +10,4 @@ public class Constants {
     public static final String defaultUserPromptMessageForImage = "Understand the image/document and provide high level overview.";
     public static final String defaultSystemPromptMessageForImageSafetyPurpose = "If the image is blank or contains any from of vulgarity/nudity or 18+ contents don't process the image just notify the image contains nudity/vulgar things";
     public static final String defaultSystemPromptMessageForImageOptimization = "If the image is not clear try to enhance the image by adding brightness, color and reduce noise";
-    public static final String userId = "12345678910";
 }

@@ -10,11 +10,9 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.messages.SystemMessage;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.*;
-
-import static com.example.springaichatmodel.Utils.Constants.userId;
-
 
 public class CustomChatMemory implements ChatMemory {
 
@@ -33,12 +31,12 @@ public class CustomChatMemory implements ChatMemory {
         this.maxMessage = builder.maxMessage;
     }
 
-
     @Override
     public void add(String conversationId, List<Message> newMessages) {
 //        newMessages.forEach(message -> {
 //            log.info("adding a message:"+message.getMessageType().getValue()+"text:"+message.getText());
 //        });
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         ChatMemoryDocument chatMemoryDocument = userChatMemoryRepository.findByUserIdAndConversationId(userId, conversationId);
         if(chatMemoryDocument==null){
             List<ChatMessage> chatMessages = new ArrayList<>();
@@ -64,6 +62,7 @@ public class CustomChatMemory implements ChatMemory {
 
     @Override
     public List<Message> get(String conversationId) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         ChatMemoryDocument chatMemoryDocument = userChatMemoryRepository.findByUserIdAndConversationId(userId, conversationId);
         if(chatMemoryDocument==null){
             return new ArrayList<Message>();
@@ -80,6 +79,7 @@ public class CustomChatMemory implements ChatMemory {
 
     @Override
     public void clear(String conversationId) {
+        String userId = SecurityContextHolder.getContext().getAuthentication().getName();
         userChatMemoryRepository.deleteChatMemoryDocumentByUserIdAndConversationId(userId,conversationId);
     }
 

@@ -21,6 +21,7 @@ import org.springframework.ai.stabilityai.StabilityAiImageModel;
 import org.springframework.ai.stabilityai.api.StabilityAiImageOptions;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,8 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
-import static com.example.springaichatmodel.Utils.Constants.userId;
 
 @Service
 public class ChatGPTModelServiceImpl implements ChatGPTModelService {
@@ -60,30 +59,32 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     }
 
     @Override
-    public String getResponseAsString(String message) {
+    public String getResponseAsString(String message, String  conversationId) {
         Prompt prompt = createPromptForChat.createPromptForRequest(message,false);
         return chatClient
                 .prompt(prompt)
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                 .call()
                 .content();
     }
 
     @Override
-    public ChatPromptDTO getResponseAsEntity(String message) {
+    public ChatPromptDTO getResponseAsEntity(String message, String conversationId) {
         Prompt prompt = createPromptForChat.createPromptForRequest(message,false);
         return chatClient
                 .prompt(prompt)
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, Constants.defaultConversationId))
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                 .call()
                 .entity(ChatPromptDTO.class);
     }
 
     @Override
-    public List<ChatPromptDTO> getResponseAsGenerics(String message) {
+    public List<ChatPromptDTO> getResponseAsGenerics(String message, String conversationId) {
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Prompt prompt = createPromptForChat.createPromptForRequest(message,false);
         return chatClient
                 .prompt(prompt)
-                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, userId))
+                .advisors(a -> a.param(ChatMemory.CONVERSATION_ID, conversationId))
                 .call()
                 .entity(new ParameterizedTypeReference<List<ChatPromptDTO>>() {
                 });
@@ -102,8 +103,8 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     }
 
     @Override
-    public List<Message> getContentsInMemory() {
-        return chatMemory.get(userId);
+    public List<Message> getContentsInMemory(String conversationId) {
+        return chatMemory.get(conversationId);
     }
 
     //need to handle the url issue.
@@ -148,19 +149,20 @@ public class ChatGPTModelServiceImpl implements ChatGPTModelService {
     }
 
     @Override
-    public ResponseMessageDTO clearChatMemory() {
+    public ResponseMessageDTO clearChatMemory(String conversationId) {
         ResponseMessageDTO responseMessageDTO = new ResponseMessageDTO();
-        chatMemory.clear(userId);
-        if (chatMemory.get(userId).size() == 0) {
+        chatMemory.clear(conversationId);
+        if (chatMemory.get(conversationId).size() == 0) {
             responseMessageDTO.setMessage("Memory cleared");
             return responseMessageDTO;
         }
-        responseMessageDTO.setMessage("Try again Data of size " + chatMemory.get(userId).size() + " is present");
+        responseMessageDTO.setMessage("Try again Data of size " + chatMemory.get(conversationId).size() + " is present");
         return responseMessageDTO;
     }
 
     @Override
     public List<String> getAllConversationIds() {
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         List<String>  conversationIdList = new ArrayList<>();
         List<ChatMemoryDocument> chatMemoryDocumentList = userChatMemoryRepository.findByUserId(userId);
         if(chatMemoryDocumentList!=null && !chatMemoryDocumentList.isEmpty()){
