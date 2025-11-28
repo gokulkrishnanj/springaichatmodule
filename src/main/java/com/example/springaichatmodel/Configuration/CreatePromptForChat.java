@@ -85,7 +85,6 @@ public class CreatePromptForChat {
                 .query(message)
                 .similarityThreshold(0.2)
                 .topK(3)
-                .filterExpression("userId == '" + userId + "'")
                 .build();
         List<Document> documentList = vectorStore.similaritySearch(searchRequest);
         log.info("documentListSize" + documentList.size());

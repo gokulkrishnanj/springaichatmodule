@@ -40,11 +40,9 @@ public class CustomVectorStore implements VectorStore {
     public void add(List<Document> documents) {
         log.info("Inside the custom vector store && Adding embeddings to the vector DB.");
         String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info("userId = " + userId);
         for(Document document : documents){
             UserVectorEmbeddings userVectorEmbeddings = new UserVectorEmbeddings();
             float [] embeds = embeddingModel.embed(document);
-            log.info("embedsLength= " + embeds.length);
             userVectorEmbeddings.setUserId(userId);
             userVectorEmbeddings.setContent(document.getText());
             userVectorEmbeddings.setMetaData(document.getMetadata());
@@ -65,7 +63,18 @@ public class CustomVectorStore implements VectorStore {
 
     @Override
     public List<Document> similaritySearch(SearchRequest request) {
-        return List.of();
+        log.info("Inside the custom vector store && Similarity Search.");
+        String userId = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        float [] embedding = embeddingModel.embed(request.getQuery());
+        int topK = request.getTopK();
+        List<UserVectorEmbeddings> userVectorEmbeddingsList = userVectorEmbeddingsRepository.searchSimilar(userId,
+                embedding,
+                topK);
+        return userVectorEmbeddingsList
+                .stream()
+                .map(userVectorEmbeddings -> {
+                    return new Document(userVectorEmbeddings.getContent(), userVectorEmbeddings.getMetaData());
+                }).toList();
     }
 
     @Override

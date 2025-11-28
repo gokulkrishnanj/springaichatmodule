@@ -22,6 +22,7 @@ public class UserVectorEmbeddings {
 
     private String userId;
 
+    @Column(length = -1) // to store max character in db default is 255 if -1 max
     private String content;
 
     @Column(columnDefinition = "jsonb")
