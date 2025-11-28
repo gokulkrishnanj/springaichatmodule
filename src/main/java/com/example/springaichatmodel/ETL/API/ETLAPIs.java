@@ -11,11 +11,11 @@ import java.util.List;
 @RequestMapping(value = "${api/v1/ETL}")
 public interface ETLAPIs {
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping(value = "${extractEmbeddingDataFromString}")
     public ResponseEntity<ResponseMessageDTO> extractEmbeddingDataFromString(@RequestBody List<String> stringList);
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @PostMapping(value = "${extractEmbeddingDataFromDocument}")
     public ResponseEntity<ResponseMessageDTO> extractEmbeddingDataFromDocument(@RequestParam(value = "document") MultipartFile file);
 

@@ -1,13 +1,9 @@
 package com.example.springaichatmodel.ETL.Configuration;
 
-import com.knuddels.jtokkit.api.EncodingType;
-import io.qdrant.client.QdrantClient;
-import org.springframework.ai.embedding.TokenCountBatchingStrategy;
+import com.example.springaichatmodel.Repository.UserVectorEmbeddingsRepository;
 import org.springframework.ai.ollama.OllamaEmbeddingModel;
 import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.VectorStore;
-import org.springframework.ai.vectorstore.pgvector.PgVectorStore;
-import org.springframework.ai.vectorstore.qdrant.QdrantVectorStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,14 +36,15 @@ public class ETLConfiguration {
     @Bean
     @Lazy
     @Primary
-    public PgVectorStore customPgVectorStore(DataSource dataSource, OllamaEmbeddingModel ollamaEmbeddingModel) {
+    public VectorStore customPgVectorStore(DataSource dataSource, OllamaEmbeddingModel ollamaEmbeddingModel, UserVectorEmbeddingsRepository  userVectorEmbeddingsRepository) {
         JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        PgVectorStore pgVectorStore = PgVectorStore.builder(jdbcTemplate,ollamaEmbeddingModel)
-                .vectorTableName("user_embeddings")
-                .dimensions(1024)
-                .initializeSchema(true)
+        CustomVectorStore vectorStore = CustomVectorStore.builder()
+                .embeddingModel(ollamaEmbeddingModel)
+                .vectorStoreRespository(userVectorEmbeddingsRepository)
+                .jdbcTemplate(jdbcTemplate)
                 .build();
-        return pgVectorStore;
+        return vectorStore;
+
     }
 
     @Bean
